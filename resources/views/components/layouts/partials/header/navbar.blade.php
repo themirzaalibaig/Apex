@@ -13,7 +13,7 @@
                         <nav class="vl-mobile-menu-active">
                             <ul>
                                 <li>
-                                    <a href="#">Home</a>
+                                    <a href="{{ route('home') }}" wire:navigate>Home</a>
                                     {{-- <div class="vl-mega-menu">
                                         <div class="vl-home-menu">
                                             <div class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-4">
@@ -77,11 +77,11 @@
                                         </div>
                                     </div> --}}
                                 </li>
-                                <li><a href="">About</a></li>
-                                <li><a href="">Services</a></li>
-                                <li><a href="">Projects</a></li>
-                                <li><a href="">Our Team</a></li>
-                                <li><a href="">Blogs</a></li>
+                                <li><a href="{{ route('about') }}" wire:navigate>About</a></li>
+                                <li><a href="{{ route('services') }}" wire:navigate>Services</a></li>
+                                <li><a href="{{ route('portfolio') }}" wire:navigate>Projects</a></li>
+                                <li><a href="{{ route('testimonials') }}" wire:navigate>Client Say's</a></li>
+                                <li><a href="{{ route('blog') }}" wire:navigate>Blogs</a></li>
 
 
                                 {{-- <li class="has-dropdown">

@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ $title ?? 'Apex SoftBuild | Solutions that scale with you' }}</title>
-    @livewireStyles
     @vite('resources/scss/main.scss')
     {{-- @vite('resources/css/app.css') --}}
 
@@ -24,7 +23,6 @@
     @include('components.layouts.partials.slider')
     @include('components.layouts.partials.cta')
     @include('components.layouts.partials.footer')
-    @livewireScriptConfig
     @yield('scripts')
     @vite('resources/js/main.js')
 </body>
