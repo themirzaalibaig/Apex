@@ -10,7 +10,6 @@
     <livewire:components.home.portfolio />
     <livewire:components.home.testimonial />
     <livewire:components.home.team />
+    <livewire:components.home.faqs />
     <livewire:components.home.blog />
-
-
 </div>
