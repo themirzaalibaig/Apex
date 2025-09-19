@@ -36,143 +36,139 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 AOS.init();
-//========== TESTIMONIAL AREA ============= //
-$(document).ready(function () {
-    // testimonial //
-    $(".portfolio-slider-area").owlCarousel({
-        loop: true,
-        margin: 30,
-        nav: true,
-        dots: false,
-        items: 10,
-        navText: [
-            "<i class='fa-solid fa-angle-left'></i>",
-            "<i class='fa-solid fa-angle-right'></i>",
-        ],
-        autoplay: true,
-        smartSpeed: 1500,
-        autoplayTimeout: 3000,
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 1,
-            },
-            600: {
-                items: 1,
-            },
-            1000: {
-                items: 2,
-            },
-        },
-    });
-
-    // testimonial //
-    $(".testimonial-review-area").owlCarousel({
-        loop: true,
-        margin: 30,
-        nav: true,
-        dots: false,
-        items: 10,
-        navText: [
-            "<i class='fa-solid fa-angle-left'></i>",
-            "<i class='fa-solid fa-angle-right'></i>",
-        ],
-        autoplay: true,
-        smartSpeed: 1500,
-        autoplayTimeout: 3000,
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 1,
-            },
-            600: {
-                items: 2,
-            },
-            1000: {
-                items: 3,
-            },
-        },
-    });
-
-    // testimonial //
-    $(".testimonial-slider-box").owlCarousel({
-        loop: true,
-        margin: 30,
-        nav: true,
-        dots: true,
-        items: 10,
-        navText: [
-            "<i class='fa-solid fa-angle-up'></i>",
-            "<i class='fa-solid fa-angle-down'></i>",
-        ],
-        autoplay: true,
-        smartSpeed: 1500,
-        autoplayTimeout: 3000,
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 1,
-            },
-            600: {
-                items: 1,
-            },
-            1000: {
-                items: 1,
-            },
-        },
-    });
-
-    // testimonial //
-    $(".about-brand-slider").owlCarousel({
-        loop: true,
-        margin: 30,
-        nav: false,
-        dots: false,
-        items: 10,
-        autoplay: true,
-        smartSpeed: 1500,
-        autoplayTimeout: 3000,
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 2,
-            },
-            600: {
-                items: 3,
-            },
-            1000: {
-                items: 4,
-            },
-        },
-    });
-
-    // testimonial //
-    $(".portfolio-slider2-boxarea").owlCarousel({
-        loop: true,
-        margin: 30,
-        nav: false,
-        dots: false,
-        items: 10,
-        autoplay: true,
-        smartSpeed: 1500,
-        autoplayTimeout: 3000,
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 1,
-            },
-            600: {
-                items: 1,
-            },
-            1000: {
-                items: 2,
-            },
-        },
-    });
-});
-(function ($) {
+const jQueryWork = () => {
     $(document).ready(function () {
-        //========== HEADER ACTIVE STRATS ============= //
+        $(".portfolio-slider-area").owlCarousel({
+            loop: true,
+            margin: 30,
+            nav: true,
+            dots: false,
+            items: 10,
+            navText: [
+                "<i class='fa-solid fa-angle-left'></i>",
+                "<i class='fa-solid fa-angle-right'></i>",
+            ],
+            autoplay: true,
+            smartSpeed: 1500,
+            autoplayTimeout: 3000,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                600: {
+                    items: 1,
+                },
+                1000: {
+                    items: 2,
+                },
+            },
+        });
+
+        // testimonial //
+        $(".testimonial-review-area").owlCarousel({
+            loop: true,
+            margin: 30,
+            nav: true,
+            dots: false,
+            items: 10,
+            navText: [
+                "<i class='fa-solid fa-angle-left'></i>",
+                "<i class='fa-solid fa-angle-right'></i>",
+            ],
+            autoplay: true,
+            smartSpeed: 1500,
+            autoplayTimeout: 3000,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                600: {
+                    items: 2,
+                },
+                1000: {
+                    items: 3,
+                },
+            },
+        });
+
+        // testimonial //
+        $(".testimonial-slider-box").owlCarousel({
+            loop: true,
+            margin: 30,
+            nav: true,
+            dots: true,
+            items: 10,
+            navText: [
+                "<i class='fa-solid fa-angle-up'></i>",
+                "<i class='fa-solid fa-angle-down'></i>",
+            ],
+            autoplay: true,
+            smartSpeed: 1500,
+            autoplayTimeout: 3000,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                600: {
+                    items: 1,
+                },
+                1000: {
+                    items: 1,
+                },
+            },
+        });
+
+        // testimonial //
+        $(".about-brand-slider").owlCarousel({
+            loop: true,
+            margin: 30,
+            nav: false,
+            dots: false,
+            items: 10,
+            autoplay: true,
+            smartSpeed: 1500,
+            autoplayTimeout: 3000,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 2,
+                },
+                600: {
+                    items: 3,
+                },
+                1000: {
+                    items: 4,
+                },
+            },
+        });
+
+        // testimonial //
+        $(".portfolio-slider2-boxarea").owlCarousel({
+            loop: true,
+            margin: 30,
+            nav: false,
+            dots: false,
+            items: 10,
+            autoplay: true,
+            smartSpeed: 1500,
+            autoplayTimeout: 3000,
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                600: {
+                    items: 1,
+                },
+                1000: {
+                    items: 2,
+                },
+            },
+        });
+
         var windowOn = $(window);
         windowOn.on("scroll", function () {
             var scroll = windowOn.scrollTop();
@@ -182,8 +178,6 @@ $(document).ready(function () {
                 $("#vl-header-sticky").addClass("header-sticky");
             }
         });
-
-        //========== HEADER ACTIVE ENDS ============= //
 
         //========== MOBILE MENU STARTS ============= //
         var vlMenuWrap = $(".vl-mobile-menu-active > ul").clone();
@@ -227,10 +221,6 @@ $(document).ready(function () {
                 );
             }
         );
-
-        //========== MOBILE MENU ENDS ============= //
-
-        //========== SIDEBAR/SEARCH AREA ============= //
         $("#mobile-menu-active").metisMenu();
         $("#mobile-menu-active .dropdown > a").on("click", function (e) {
             e.preventDefault();
@@ -297,63 +287,64 @@ $(document).ready(function () {
 
         //========== NICE SELECT ============= //
         $("select").niceSelect();
+        const counterElements = document.querySelectorAll(".counter");
 
-        //========== CASE IMAGE ============= //
-    });
-    //========== COUNTER UP============= //
-    const counterElements = document.querySelectorAll(".counter");
+        counterElements.forEach((el) => {
+            const endVal = parseInt(el.innerText);
+            const countUp = new CountUp(el, endVal);
+            if (!countUp.error) {
+                countUp.start();
+            } else {
+                console.error(countUp.error);
+            }
+        });
 
-    counterElements.forEach((el) => {
-        const endVal = parseInt(el.innerText);
-        const countUp = new CountUp(el, endVal);
-        if (!countUp.error) {
-            countUp.start();
-        } else {
-            console.error(countUp.error);
-        }
-    });
+        const color = $(".service-list li a");
+        color.on("click", function () {
+            $(".service-list li a");
+            $(this).addClass("active");
+        });
 
-    const color = $(".service-list li a");
-    color.on("click", function () {
-        $(".service-list li a");
-        $(this).addClass("active");
-    });
+        //testimonial slider //
+        $(".slider2").slick({
+            slidesToShow: 4,
+            asNavFor: ".slider1",
+            focusOnSelect: true,
+            infinite: false,
+        });
 
-    //testimonial slider //
-    $(".slider2").slick({
-        slidesToShow: 4,
-        asNavFor: ".slider1",
-        focusOnSelect: true,
-        infinite: false,
-    });
+        $(".slider1").slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: true,
+            autoplay: true,
+            autoplaySpeed: 2000,
+            loop: true,
+            focusOnSelect: true,
+            asNavFor: ".slider2",
+            infinite: true,
+            prevArrow: $(".next-arrow"),
+            nextArrow: $(".prev-arrow"),
+        });
+        //========== PRELOADER ============= //
+        $(window).on("load", function (event) {
+            setTimeout(function () {
+                $("#preloader").fadeOut();
+            }, 200);
+        });
 
-    $(".slider1").slick({
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: true,
-        autoplay: true,
-        autoplaySpeed: 2000,
-        loop: true,
-        focusOnSelect: true,
-        asNavFor: ".slider2",
-        infinite: true,
-        prevArrow: $(".next-arrow"),
-        nextArrow: $(".prev-arrow"),
+        $(document).on("livewire:navigated", (e) => {
+            console.log(e);
+            setTimeout(function () {
+                $("#preloader").fadeOut();
+            }, 200);
+        });
     });
-    //========== PRELOADER ============= //
-    $(window).on("load", function (event) {
-        setTimeout(function () {
-            $("#preloader").fadeOut();
-        }, 200);
-    });
+};
 
-    $(document).on("livewire:navigated", (e) => {
-        console.log(e);
-        setTimeout(function () {
-            $("#preloader").fadeOut();
-        }, 200);
-    });
-})(jQuery);
+document.addEventListener("livewire:navigated", function () {
+    jQueryWork();
+});
 
 //========== GSAP AREA ============= //
 
@@ -430,7 +421,8 @@ $(document).ready(function () {
 // });
 // });
 // }
-document.addEventListener("livewire:navigated", (e) => {
+
+const GSAPWork = () => {
     if ($(".reveal").length) {
         gsap.registerPlugin(ScrollTrigger);
         let revealContainers = document.querySelectorAll(".reveal");
@@ -452,99 +444,97 @@ document.addEventListener("livewire:navigated", (e) => {
             });
         });
     }
-});
-//========== PROGRESS BAR AREA ============= //
-function animateElements() {
-    $(".progressbar").each(function () {
-        var elementPos = $(this).offset().top;
-        var topOfWindow = $(window).scrollTop();
-        var percent = $(this).find(".circle").attr("data-percent");
-        var percentage = parseInt(percent, 10) / parseInt(100, 10);
-        var animate = $(this).data("animate");
-        if (elementPos < topOfWindow + $(window).height() - 10 && !animate) {
-            $(this).data("animate", true);
-            $(this)
-                .find(".circle")
-                .circleProgress({
-                    startAngle: -Math.PI / 2,
-                    value: percent / 100,
-                    size: 80,
-                    thickness: 5,
-                    emptyFill: "#2B2D2E",
-                    fill: {
-                        color: "#CEF12B",
-                    },
-                })
-                .on(
-                    "circle-animation-progress",
-                    function (event, progress, stepValue) {
-                        $(this)
-                            .find("div")
-                            .text((stepValue * 100).toFixed() + "%");
-                    }
-                )
-                .stop();
-        }
-    });
-}
-
-// Show animated elements
-animateElements();
-$(window).scroll(animateElements);
-
-const listItems = document.querySelectorAll(".list-container li");
-const images = document.querySelectorAll(".image-container .image");
-listItems.forEach((item) => {
-    item.addEventListener("mouseover", () => {
-        const targetImageId = item.getAttribute("data-image");
-        images.forEach((div) => {
-            div.classList.remove("active");
-            if (div.id === targetImageId) {
-                div.classList.add("active");
+    function animateElements() {
+        $(".progressbar").each(function () {
+            var elementPos = $(this).offset().top;
+            var topOfWindow = $(window).scrollTop();
+            var percent = $(this).find(".circle").attr("data-percent");
+            var percentage = parseInt(percent, 10) / parseInt(100, 10);
+            var animate = $(this).data("animate");
+            if (
+                elementPos < topOfWindow + $(window).height() - 10 &&
+                !animate
+            ) {
+                $(this).data("animate", true);
+                $(this)
+                    .find(".circle")
+                    .circleProgress({
+                        startAngle: -Math.PI / 2,
+                        value: percent / 100,
+                        size: 80,
+                        thickness: 5,
+                        emptyFill: "#2B2D2E",
+                        fill: {
+                            color: "#CEF12B",
+                        },
+                    })
+                    .on(
+                        "circle-animation-progress",
+                        function (event, progress, stepValue) {
+                            $(this)
+                                .find("div")
+                                .text((stepValue * 100).toFixed() + "%");
+                        }
+                    )
+                    .stop();
             }
         });
+    }
+
+    // Show animated elements
+    animateElements();
+    $(window).scroll(animateElements);
+
+    const listItems = document.querySelectorAll(".list-container li");
+    const images = document.querySelectorAll(".image-container .image");
+    listItems.forEach((item) => {
+        item.addEventListener("mouseover", () => {
+            const targetImageId = item.getAttribute("data-image");
+            images.forEach((div) => {
+                div.classList.remove("active");
+                if (div.id === targetImageId) {
+                    div.classList.add("active");
+                }
+            });
+        });
     });
-});
 
-// UPDATE: I was able to get this working again... Enjoy!
-var cursor = document.querySelector(".procus-cursor");
-var cursorinner = document.querySelector(".procus-cursor2");
-var a = document.querySelectorAll("a");
+    // UPDATE: I was able to get this working again... Enjoy!
+    var cursor = document.querySelector(".procus-cursor");
+    var cursorinner = document.querySelector(".procus-cursor2");
+    var a = document.querySelectorAll("a");
 
-document.addEventListener("mousemove", function (e) {
-    var x = e.clientX;
-    var y = e.clientY;
-    cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
-});
-
-document.addEventListener("mousemove", function (e) {
-    var x = e.clientX;
-    var y = e.clientY;
-    cursorinner.style.left = x + "px";
-    cursorinner.style.top = y + "px";
-});
-
-document.addEventListener("mousedown", function () {
-    cursor.classList.add("click");
-    cursorinner.classList.add("cursorinnerhover");
-});
-
-document.addEventListener("mouseup", function () {
-    cursor.classList.remove("click");
-    cursorinner.classList.remove("cursorinnerhover");
-});
-
-a.forEach((item) => {
-    item.addEventListener("mouseover", () => {
-        cursor.classList.add("hover");
+    document.addEventListener("mousemove", function (e) {
+        var x = e.clientX;
+        var y = e.clientY;
+        cursor.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
     });
-    item.addEventListener("mouseleave", () => {
-        cursor.classList.remove("hover");
-    });
-});
 
-// SWIPER SLIDER //
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("mousemove", function (e) {
+        var x = e.clientX;
+        var y = e.clientY;
+        cursorinner.style.left = x + "px";
+        cursorinner.style.top = y + "px";
+    });
+
+    document.addEventListener("mousedown", function () {
+        cursor.classList.add("click");
+        cursorinner.classList.add("cursorinnerhover");
+    });
+
+    document.addEventListener("mouseup", function () {
+        cursor.classList.remove("click");
+        cursorinner.classList.remove("cursorinnerhover");
+    });
+
+    a.forEach((item) => {
+        item.addEventListener("mouseover", () => {
+            cursor.classList.add("hover");
+        });
+        item.addEventListener("mouseleave", () => {
+            cursor.classList.remove("hover");
+        });
+    });
     var swiper3 = new Swiper(".swiper-thumb2", {
         modules: [Autoplay, Navigation, Scrollbar, Thumbs],
         spaceBetween: 10,
@@ -572,4 +562,8 @@ document.addEventListener("DOMContentLoaded", function () {
             swiper: swiper3,
         },
     });
+};
+
+document.addEventListener("livewire:navigated", (e) => {
+    GSAPWork();
 });
