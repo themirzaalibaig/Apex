@@ -13,10 +13,7 @@
                         <nav class="vl-mobile-menu-active">
                             <ul>
                                 <li>
-                                    <a href="#">Home
-                                         {{-- <span>
-                                        <i class="fa-solid fa-angle-down d-lg-inline d-none"></i></span> --}}
-                                    </a>
+                                    <a href="#">Home</a>
                                     {{-- <div class="vl-mega-menu">
                                         <div class="vl-home-menu">
                                             <div class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-4">
@@ -80,26 +77,11 @@
                                         </div>
                                     </div> --}}
                                 </li>
+                                <li><a href="">About</a></li>
                                 <li><a href="">Services</a></li>
                                 <li><a href="">Projects</a></li>
-                                <li>
-                                    <a href="">About Us</a>
-                                </li>
-                                <li>
-                                    <a href="">Contact Us</a>
-                                </li>
-                                {{-- <li>
-                                    <a href="">Our Team</a>
-                                </li>
-                                <li>
-                                    <a href="">Clients say</a>
-                                </li>
-                                <li>
-                                    <a href="">Blogs</a>
-                                </li>
-                                <li>
-                                    <a href="">FAQ's</a>
-                                </li> --}}
+                                <li><a href="">Our Team</a></li>
+                                <li><a href="">Blogs</a></li>
 
 
                                 {{-- <li class="has-dropdown">
