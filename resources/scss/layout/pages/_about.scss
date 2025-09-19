@@ -1,0 +1,326 @@
+@use '../../utils/' as * ;
+
+/*============= ABOUT CSS AREA STARTS ===============*/
+.about1-section-area {
+    position: relative;
+    z-index: 1;
+    .elements9 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 200px;
+        z-index: 2;
+        @media #{$xs} {
+            display: none;
+        }
+        @media #{$md} {
+            display: none;
+        }
+    }
+    .images {
+        position: relative;
+        z-index: 1;
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .elements8 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            left: 30px;
+            z-index: -1;
+            top: 30px;
+            @media #{$xs} {
+                left: 0;
+            }
+        }
+    }
+    .about-header {
+        padding: 0 0 0 70px;
+        @media #{$xs} {
+            padding: 0;
+            margin-top: 60px;
+        }
+        @media #{$md} {
+            padding: 0;
+            margin-top: 60px;
+        }
+        .bg-progress {
+            border-radius: var(--rounded-lg, 8px);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 20px;
+            .progress-bar {
+                margin-bottom: 28px;
+            }
+            
+            label {
+                color: var(--ztc-text-text-1);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s18);
+                font-style: normal;
+                font-weight: var(--ztc-weight-semibold);
+                line-height: 18px;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 14px;
+            }
+            
+            .progress {
+                background-color: #2A2C30;
+                border-radius: 20px;
+                height: 10px;
+                position: relative;
+            }
+            
+            .progress-inner {
+                border-radius: 40px;
+                background: var(--ztc-text-text-8);
+                height: 100%;
+                transition: width 0.4s ease;
+            }
+        }
+    
+    }
+}
+
+// Homepage 02 //
+.about2-section-area {
+    position: relative;
+    z-index: 1;
+    .about-images {
+        @media #{$xs} {
+            margin-top: 30px;
+        }
+        @media #{$md} {
+            margin-top: 30px;
+        }
+        p {
+            padding: 0 30px 0 0;
+            @media #{$xs} {
+                padding: 0;
+            }
+            @media #{$md} {
+                padding: 0;
+            }
+        }
+    }
+    .heading2 {
+        position: sticky;
+        top: 120px;
+    }
+}
+
+// Homepage 03 //
+.abotu3-section-area {
+    position: relative;
+    z-index: 3;
+    .about-images-area {
+        position: relative;
+        z-index: 1;
+        .elements12 {
+            position: absolute;
+            top: -40px;
+            left: -40px;
+        }
+        .elements13 {
+            position: absolute;
+            bottom: -30px;
+            left: 35%;
+        }
+        .img1 {
+            img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+        }
+    }
+    .about-heading {
+        padding: 0 0 0 50px;
+        position: relative;
+        z-index: 2;
+        @media #{$xs} {
+            padding: 0;
+            margin-top: 30px;
+        }
+
+        @media #{$md} {
+            padding: 0;
+            margin-top: 30px;
+        }
+        .counter-boxarea {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            span.border {
+                height: 70px;
+                width: 1px;
+                display: inline-block;
+                opacity: 10%;
+            }
+            .counter-box {
+                text-align: center;
+                h2 {
+                    font-size: var(--ztc-font-size-font-s32);
+                    line-height: 32px;
+                }
+            }
+        }
+    }
+}
+
+// Homepage 04 //
+.about4-section-area {
+    position: relative;
+    z-index: 1;
+    .images {
+        position: relative;
+        z-index: 1;
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .elements8 {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            left: 30px;
+            z-index: -1;
+            top: 30px;
+            @media #{$xs} {
+                left: 0;
+            }
+        }
+    }
+    .about-header {
+        padding: 0 0 0 70px;
+        @media #{$xs} {
+            padding: 0;
+            margin-top: 60px;
+        }
+        @media #{$md} {
+            padding: 0;
+            margin-top: 60px;
+        }
+        .bg-progress {
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 20px;
+            .progress-bar {
+                margin-bottom: 28px;
+            }
+            
+            label {
+                color: var(--ztc-text-text-1);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s18);
+                font-style: normal;
+                font-weight: var(--ztc-weight-semibold);
+                line-height: 18px;
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 14px;
+            }
+            
+            .progress {
+                background-color: #2A2C30;
+                border-radius: 20px;
+                height: 10px;
+                position: relative;
+            }
+            
+            .progress-inner {
+                border-radius: 40px;
+                background: var(--ztc-bg-bg-10);
+                height: 100%;
+                transition: width 0.4s ease;
+            }
+        }
+    
+    }
+}
+// Inner pages //
+.about-others-area {
+    position: relative;
+    z-index: 1;
+    .img1 {
+        position: relative;
+        z-index: 1;
+        .play-btn {
+            position: absolute;
+            z-index: 2;
+            bottom: 20px;
+            right: 20px;
+            a {
+                color: var(--ztc-text-text-1);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s24);
+                font-style: normal;
+                font-weight: var(--ztc-weight-bold);
+                line-height: 24px;
+                text-transform: uppercase;  
+                display: inline-block;
+                transition: all .4s; 
+                border-radius: 120px;
+                background: var(--ztc-bg-bg-5);
+                padding: 8px 10px;
+                span {
+                    height: 70px;
+                    width: 70px;
+                    text-align: center;
+                    line-height: 70px;
+                    display: inline-block;
+                    transition: all .4s;
+                    color: var(--ztc-text-text-4);
+                    border-radius: 50%;
+                    background: var(--ztc-bg-bg-7);
+                    margin: 0 4px 0 0;
+                }     
+            }
+        }
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+        
+    }
+}
+
+.about-brand-sliderarea {
+    h3 {
+        color: var(--ztc-text-text-1);
+        font-family: var(--ztc-family-font1);
+        font-size: var(--ztc-font-size-font-s32);
+        font-style: normal;
+        font-weight: var(--ztc-weight-bold);
+        line-height: 32px;
+        letter-spacing: -0.64px;
+        text-transform: capitalize;      
+    }
+    .about-brand-slider {
+        .brand-img1 {
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 32px;
+            text-align: center;
+            img {
+                width: 168px;
+                height: 48px;
+                object-fit: contain;
+                display: inline-block;
+            }
+        }
+    }
+}
+/*============= ABOUT CSS AREA ENDS ===============*/

@@ -1,0 +1,159 @@
+@use '../../utils/' as * ;
+
+/*============= CTA CSS AREA ===============*/
+.cta-btn-area {
+    position: relative;
+    z-index: 1;
+    .btn-area {
+        a {
+            color: var(--ztc-text-text-1);
+            text-align: center;
+            font-family: var(--ztc-family-font1);
+            font-size: 180px;
+            font-style: normal;
+            font-weight: var(--ztc-weight-bold);
+            line-height: 180px; /* 100% */
+            letter-spacing: -3.6px;
+            text-decoration-line: underline;
+            text-decoration-style: solid;
+            text-decoration-skip-ink: none;
+            text-decoration-thickness: auto;
+            text-underline-offset: auto;
+            text-underline-position: from-font;
+            text-transform: uppercase;   
+            display: block;  
+            transition: all .4s;
+            @media #{$xs} {
+                font-size: var(--ztc-font-size-font-s60);
+                line-height: 60px;
+            }
+            @media #{$md} {
+                font-size: var(--ztc-font-size-font-s100);
+                line-height: 100px;
+            }
+            &:hover {
+                color: var(--ztc-text-text-8);
+                transition: all .4s;
+            }  
+        }
+    }
+}
+
+// Homepage 02 //
+.cta2-section-area {
+    background: #2D3034;
+    position: relative;
+    z-index: 1;
+    .cta-bg-area {
+        position: relative;
+        z-index: 1;
+        padding: 24px;
+        border-radius: 4px;
+        background: var(--ztc-text-text-1);
+        .cta-header {
+            p {
+                color: var(--gray-500, #6B7280);
+                font-family: var(--ztc-family-font2);
+                font-size: var(--ztc-font-size-font-s16);
+                font-style: normal;
+                font-weight: var(--ztc-weight-medium);
+                line-height: 16px;  
+                @media #{$xs} {
+                    line-height: 24px;
+                }     
+            }
+            h2 {
+                color: var(--ztc-text-text-4);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s32);
+                font-style: normal;
+                font-weight: var(--ztc-weight-bold);
+                line-height: 32px;
+                text-transform: capitalize;      
+                @media #{$xs} {
+                    line-height: 40px;
+                }  
+            }
+        }
+
+        form {
+            position: relative;
+            z-index: 1;
+            @media #{$xs} {
+                margin-top: 30px;
+            }
+            @media #{$md} {
+                margin-top: 30px;
+            }
+            input {
+                width: 100%;
+                border-radius: 8px;
+                background: rgba(45, 48, 52, 0.05); 
+                color: var(--ztc-text-text-4);
+                font-family: var(--ztc-family-font2);
+                font-size: var(--ztc-font-size-font-s18);
+                font-style: normal;
+                font-weight: var(--ztc-weight-medium);
+                line-height: 18px;
+                text-transform: capitalize; 
+                padding: 28px 16px;
+                &::placeholder {
+                    color: var(--ztc-text-text-4);
+                    font-family: var(--ztc-family-font2);
+                    font-size: var(--ztc-font-size-font-s18);
+                    font-style: normal;
+                    font-weight: var(--ztc-weight-medium);
+                    line-height: 18px;
+                    text-transform: capitalize;
+                }  
+            }
+            button {
+                border: none;
+                outline: none;
+                position: absolute;
+                right: 12px;
+                top: 12px;
+            }
+        }
+    }
+}
+
+// homepage 04 //
+.cta-btn-area6 {
+    position: relative;
+    z-index: 1;
+    .btn-area {
+        a {
+            color: var(--ztc-text-text-1);
+            text-align: center;
+            font-family: var(--ztc-family-font1);
+            font-size: 180px;
+            font-style: normal;
+            font-weight: var(--ztc-weight-bold);
+            line-height: 180px; /* 100% */
+            letter-spacing: -3.6px;
+            text-decoration-line: underline;
+            text-decoration-style: solid;
+            text-decoration-skip-ink: none;
+            text-decoration-thickness: auto;
+            text-underline-offset: auto;
+            text-underline-position: from-font;
+            text-transform: uppercase;   
+            display: block;  
+            transition: all .4s;
+            @media #{$xs} {
+                font-size: var(--ztc-font-size-font-s60);
+                line-height: 60px;
+            }
+            @media #{$md} {
+                font-size: var(--ztc-font-size-font-s100);
+                line-height: 100px;
+            }
+            &:hover {
+                color: var(--ztc-text-text-11);
+                transition: all .4s;
+            }  
+        }
+    }
+}
+/*============= CTA CSS AREA ENDS===============*/

@@ -1,0 +1,228 @@
+@use '../../utils/' as * ;
+
+/*============= CONTACT CSS AREA ===============*/
+.contact-inner-area {
+    position: relative;
+    z-index: 1;
+    .elements15 {
+        position: absolute;
+        top: -300px;
+        right: 0;
+        z-index: -1;
+    }
+    .widget-contactbox {
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 24px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        z-index: 1;
+        &:hover {
+            .icons {
+                background: var(--ztc-bg-bg-5);
+                transition: all .4s;
+                img {
+                    filter: brightness(0) invert(1);
+                    transition: all .4s;
+                }
+            }
+            &::after {
+                width: 100%;
+                left: 0;
+                transition: all .4s;
+                visibility: visible;
+                opacity: 1;
+            }
+            .content {
+                h4 {
+                    color: var(--ztc-text-text-4);
+                    transition: all .4s;
+                }
+                a {
+                    color: var(--ztc-text-text-4);
+                    opacity: 80%;
+                    transition: all .4s;
+                }
+            }
+        }
+        &::after {
+            background: var(--ztc-bg-bg-7);
+            position: absolute;
+            content: "";
+            height: 100%;
+            left: 50%;
+            width: 10px;
+            border-radius: 10px;
+            top: 0;
+            transition: all .4s;
+            visibility: hidden;
+            opacity: 0;
+            z-index: -1;
+        }
+        .icons {
+            height: 60px;
+            width: 60px;
+            text-align: center;
+            line-height: 60px;
+            display: inline-block;
+            transition: all .4s;
+            background: var(--ztc-bg-bg-7);
+            border-radius: 50%;
+            img {
+                transition: all .4s;
+            }
+        }
+        .content {
+            padding-left: 16px;
+            h4 {
+                color: var(--ztc-text-text-1);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s18);
+                font-style: normal;
+                font-weight: var(--ztc-weight-semibold);
+                line-height: 18px; 
+                transition: all .4s;  
+                text-transform: uppercase;       
+            }
+            a {
+                color: var(--ztc-text-text-1);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s16);
+                font-style: normal;
+                font-weight: var(--ztc-weight-medium);
+                line-height: 16px;
+                display: inline-block;
+                transition: all .4s;
+                margin-top: 10px;        
+            }
+        }
+    }
+
+    .contact-author-boxarea {
+        position: relative;
+        z-index: 1;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 32px;
+        @media #{$xs} {
+            margin-top: 30px;
+        }
+        @media #{$md} {
+            margin-top: 30px;
+        }
+        h3 {
+            color: var(--ztc-text-text-1);
+            font-family: var(--ztc-family-font1);
+            font-size: var(--ztc-font-size-font-s24);
+            font-style: normal;
+            font-weight: var(--ztc-weight-semibold);
+            line-height: 24px; 
+            display: inline-block; 
+            text-transform: uppercase;      
+        }
+        .input-area {
+            input {
+                width: 100%;
+                color: var(--ztc-text-text-1);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s16);
+                font-style: normal;
+                font-weight: var(--ztc-weight-medium);
+                line-height: 16px;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.04);
+                padding: 18px;
+                margin-top: 16px;
+                &::placeholder {
+                    color: var(--ztc-text-text-1);
+                    font-family: var(--ztc-family-font1);
+                    font-size: var(--ztc-font-size-font-s16);
+                    font-style: normal;
+                    font-weight: var(--ztc-weight-medium);
+                    line-height: 16px;
+                    opacity: 0.7;
+                }       
+            }
+
+            textarea {
+                width: 100%;
+                color: var(--ztc-text-text-1);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s16);
+                font-style: normal;
+                font-weight: var(--ztc-weight-medium);
+                line-height: 16px;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.04);
+                padding: 18px;
+                margin-top: 16px;
+                height: 140px;
+                &::placeholder {
+                    color: var(--ztc-text-text-1);
+                    font-family: var(--ztc-family-font1);
+                    font-size: var(--ztc-font-size-font-s16);
+                    font-style: normal;
+                    font-weight: var(--ztc-weight-medium);
+                    line-height: 16px;
+                    opacity: 0.7;
+                }       
+            }
+            button {
+                text-align: end;
+                border: none;
+                outline: none;
+            }
+        }
+    }
+    .contact-images {
+        position: relative;
+        z-index: 1;
+        padding: 0 50px 0 0;
+        @media #{$xs} {
+            padding: 0;
+            margin-bottom: 30px;
+        }
+        @media #{$md} {
+            padding: 0;
+            margin-bottom: 30px;
+        }
+        .elements21 {
+            position: absolute;
+        }
+        .img1 {
+            text-align: end;
+            img {
+                height: 540px;
+                width: 420px;
+                object-fit: cover;
+                border-radius: 16px;
+            }
+        }
+        .img2 {
+            position: relative;
+            z-index: 1;
+            margin-top: -353px;
+            @media #{$xs} {
+                margin-top: 30px;
+            }
+            img {
+                height: 390px;
+                width: 340px;
+                object-fit: cover;
+                border-radius: 16px;
+            }
+        }
+    }
+    .maps-area {
+        iframe {
+            width: 100%;
+            height: 440px;
+            border-radius: 16px;
+            @media #{$xs} {
+                height: 150px;
+            }
+        }
+    }
+}
+/*============= CONTACT CSS AREA ENDS===============*/

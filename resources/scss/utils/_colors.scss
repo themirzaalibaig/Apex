@@ -1,0 +1,34 @@
+$colors: (
+    'text': (
+        'text-1': #fff,
+        'text-2': #9FBD17,
+        'text-3': rgba(255, 255, 255, 0.80),
+        'text-4': #03060A,
+        'text-5':rgba(17, 17, 17, 0.90),
+        'text-6':#FEFE1F,
+        'text-7':#03060A,
+        'text-8':#CEF12B,
+        'text-9':#FEFE1F,
+        'text-10':#03060A,
+        'text-11':#F13A00,
+    ),
+    'bg': (
+        'bg-1':#fff,
+        'bg-2':#9FBD17,
+        'bg-3': rgba(255, 255, 255, 0.06),
+        'bg-4':#FEFE1F,
+        'bg-5':#03060A,
+        'bg-6':#2D3034,
+        'bg-7':#CEF12B,
+        'bg-8':#FEFE1F,
+        'bg-9':#03060A,
+        'bg-10':var(--Color, linear-gradient(90deg, #FF4308 0%, #FB8500 100%)),
+    ),
+
+    'border': (
+        'border-1': #E5E7EB,
+        'border-2': #dfdcdc,
+        'border-3':#F13A00,
+    )
+);
+
