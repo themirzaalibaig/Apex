@@ -216,18 +216,6 @@ $('.portfolio-slider2-boxarea').owlCarousel({
     //========== MOBILE MENU ENDS ============= //
 
     //========== SIDEBAR/SEARCH AREA ============= //
-    $(".header-search-btn").on("click", function (e) {
-      e.preventDefault();
-      $(".header-search-form-wrapper").addClass("open");
-      $('.header-search-form-wrapper input[type="search"]').focus();
-      $('.body-overlay').addClass('active');
-    });
-    $(".tx-search-close").on("click", function (e) {
-      e.preventDefault();
-      $(".header-search-form-wrapper").removeClass("open");
-      $("body").removeClass("active");
-      $('.body-overlay').removeClass('active');
-    });
     $('#mobile-menu-active').metisMenu();
     $('#mobile-menu-active .dropdown > a').on('click', function (e) {
       e.preventDefault();

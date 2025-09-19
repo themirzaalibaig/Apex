@@ -12,10 +12,12 @@
                     <div class="vl-main-menu text-center">
                         <nav class="vl-mobile-menu-active">
                             <ul>
-                                <li class="has-dropdown">
-                                    <a href="#">Home <span><i
-                                                class="fa-solid fa-angle-down d-lg-inline d-none"></i></span></a>
-                                    <div class="vl-mega-menu">
+                                <li>
+                                    <a href="#">Home
+                                         {{-- <span>
+                                        <i class="fa-solid fa-angle-down d-lg-inline d-none"></i></span> --}}
+                                    </a>
+                                    {{-- <div class="vl-mega-menu">
                                         <div class="vl-home-menu">
                                             <div class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-4">
                                                 <div class="col">
@@ -76,10 +78,31 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </li>
+                                <li><a href="">Services</a></li>
+                                <li><a href="">Projects</a></li>
+                                <li>
+                                    <a href="">About Us</a>
+                                </li>
+                                <li>
+                                    <a href="">Contact Us</a>
+                                </li>
+                                {{-- <li>
+                                    <a href="">Our Team</a>
+                                </li>
+                                <li>
+                                    <a href="">Clients say</a>
+                                </li>
+                                <li>
+                                    <a href="">Blogs</a>
+                                </li>
+                                <li>
+                                    <a href="">FAQ's</a>
+                                </li> --}}
 
-                                <li class="has-dropdown">
+
+                                {{-- <li class="has-dropdown">
                                     <a href="#">Pages <span><i
                                                 class="fa-solid fa-angle-down d-lg-inline d-none"></i></span></a>
                                     <ul class="sub-menu">
@@ -141,16 +164,13 @@
                                             <a href="">Blog Single</a>
                                         </li>
                                     </ul>
-                                </li>
+                                </li> --}}
                             </ul>
                         </nav>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-6">
                     <div class="vl-hero-btn d-none d-lg-block text-end">
-                        <div class="search-icon header__search header-search-btn">
-                            <a href="#"><img src="/img/icons/search1.svg" alt="" /></a>
-                        </div>
                         <span class="vl-btn-wrap text-end"><a href="" class="vl-btn1"
                                 style="overflow: hidden;">Let’s Build Together</a></span>
                         <button class="hamburger_menu"><img src="/img/icons/bars-icons1.svg" alt="" /></button>
