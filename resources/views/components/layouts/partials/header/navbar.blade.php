@@ -5,7 +5,7 @@
             <div class="row align-items-center row-bg1">
                 <div class="col-lg-2 col-md-6 col-6">
                     <div class="vl-logo">
-                        <a href=""><img src="/img/logo/logo1.png" alt="" /></a>
+                        <a href="{{ route('home') }}" wire:navigate><img src="/img/logo/logo1.png" alt="" /></a>
                     </div>
                 </div>
                 <div class="col-lg-6 d-none d-lg-block">
@@ -153,7 +153,7 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-6">
                     <div class="vl-hero-btn d-none d-lg-block text-end">
-                        <span class="vl-btn-wrap text-end"><a href="" class="vl-btn1"
+                        <span class="vl-btn-wrap text-end"><a href="{{ route('contact') }}" wire:navigate class="vl-btn1"
                                 style="overflow: hidden;">Let’s Build Together</a></span>
                         <button class="hamburger_menu"><img src="/img/icons/bars-icons1.svg" alt="" /></button>
                     </div>
