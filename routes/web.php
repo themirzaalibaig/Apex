@@ -8,6 +8,7 @@ use App\Livewire\Portfolio;
 use App\Livewire\Testimonials;
 use App\Livewire\Blog;
 use App\Livewire\Contact;
+use App\Livewire\Login;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,6 +20,9 @@ Route::get('/testimonials', Testimonials::class)->name('testimonials');
 Route::get('/blog', Blog::class)->name('blog');
 Route::get('/contact', Contact::class)->name('contact');
 
+Route::get('/login', Login::class)->name('login');
 
 
-Route::get('/admin', Dashboard::class)->name('admin.dashboard');
+Route::middleware(["auth"])->group(function () {
+    Route::get('/admin', Dashboard::class)->name('dashboard');
+})->name("admin");
