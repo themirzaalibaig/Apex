@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\About;
+use App\Livewire\Admin\Dashboard;
 use App\Livewire\Home;
 use App\Livewire\Services;
 use App\Livewire\Portfolio;
@@ -17,3 +18,7 @@ Route::get('/portfolio', Portfolio::class)->name('portfolio');
 Route::get('/testimonials', Testimonials::class)->name('testimonials');
 Route::get('/blog', Blog::class)->name('blog');
 Route::get('/contact', Contact::class)->name('contact');
+
+
+
+Route::get('/admin', Dashboard::class)->name('admin.dashboard');
