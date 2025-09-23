@@ -13,7 +13,7 @@
                         <nav class="vl-mobile-menu-active">
                             <ul>
                                 <li>
-                                    <a href="{{ route('home') }}" wire:navigate>Home</a>
+                                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}" wire:navigate>Home</a>
                                     {{-- <div class="vl-mega-menu">
                                         <div class="vl-home-menu">
                                             <div class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-4">
@@ -77,11 +77,11 @@
                                         </div>
                                     </div> --}}
                                 </li>
-                                <li><a href="{{ route('about') }}" wire:navigate>About</a></li>
-                                <li><a href="{{ route('services') }}" wire:navigate>Services</a></li>
-                                <li><a href="{{ route('portfolio') }}" wire:navigate>Projects</a></li>
-                                <li><a href="{{ route('testimonials') }}" wire:navigate>Client Say's</a></li>
-                                <li><a href="{{ route('blog') }}" wire:navigate>Blogs</a></li>
+                                <li><a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}" wire:navigate>About</a></li>
+                                <li><a class="nav-link {{ request()->routeIs('services') ? 'active' : '' }}" href="{{ route('services') }}" wire:navigate>Services</a></li>
+                                <li><a class="nav-link {{ request()->routeIs('portfolio') ? 'active' : '' }}" href="{{ route('portfolio') }}" wire:navigate>Projects</a></li>
+                                <li><a class="nav-link {{ request()->routeIs('testimonials') ? 'active' : '' }}" href="{{ route('testimonials') }}" wire:navigate>Client Say's</a></li>
+                                <li><a class="nav-link {{ request()->routeIs('blog') ? 'active' : '' }}" href="{{ route('blog') }}" wire:navigate>Blogs</a></li>
 
 
                                 {{-- <li class="has-dropdown">

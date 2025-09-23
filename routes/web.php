@@ -9,11 +9,8 @@ use App\Livewire\Blog;
 use App\Livewire\Contact;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
-Route::get('/home', Home::class)->name('home');
+Route::get('/', Home::class)->name('home');
 Route::get('/about', About::class)->name('about');
 Route::get('/services', Services::class)->name('services');
 Route::get('/portfolio', Portfolio::class)->name('portfolio');
