@@ -8,14 +8,22 @@
     <title>{{ $title ?? 'Apex SoftBuild | Solutions that scale with you' }}</title>
     @vite('resources/css/app.css')
     {{-- @vite('resources/css/app.css') --}}
+    @fluxAppearance
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600&display=swap" rel="stylesheet" />
 
     @yield('styles')
 </head>
 
-<body>
-    {{ $slot }}
+<body class="min-h-screen bg-white dark:bg-zinc-800">
+    @include('components.layouts.partials.admin.sidebar')
+    @include('components.layouts.partials.admin.header')
+    <flux:main>
+        {{ $slot }}
+    </flux:main>
 
     {{-- @vite('resources/js/main.js') --}}
+    @fluxScripts
 </body>
 
 </html>
