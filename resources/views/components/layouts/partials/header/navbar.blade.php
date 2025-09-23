@@ -77,12 +77,11 @@
                                         </div>
                                     </div> --}}
                                 </li>
-                                <li><a class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}" href="{{ route('about') }}" wire:navigate>About</a></li>
-                                <li><a class="nav-link {{ request()->routeIs('services') ? 'active' : '' }}" href="{{ route('services') }}" wire:navigate>Services</a></li>
-                                <li><a class="nav-link {{ request()->routeIs('portfolio') ? 'active' : '' }}" href="{{ route('portfolio') }}" wire:navigate>Projects</a></li>
-                                <li><a class="nav-link {{ request()->routeIs('testimonials') ? 'active' : '' }}" href="{{ route('testimonials') }}" wire:navigate>Client Say's</a></li>
-                                <li><a class="nav-link {{ request()->routeIs('blog') ? 'active' : '' }}" href="{{ route('blog') }}" wire:navigate>Blogs</a></li>
-
+                                <li><a class="nav-link" href="{{ route('about') }}" wire:navigate wire:current="active">About</a></li>
+                                <li><a class="nav-link" href="{{ route('services') }}" wire:navigate wire:current="active">Services</a></li>
+                                <li><a class="nav-link" href="{{ route('portfolio') }}" wire:navigate wire:current="active">Projects</a></li>
+                                <li><a class="nav-link" href="{{ route('testimonials') }}" wire:navigate wire:current="active">Client Say's</a></li>
+                                <li><a class="nav-link" href="{{ route('blog') }}" wire:navigate wire:current="active">Blogs</a></li>
 
                                 {{-- <li class="has-dropdown">
                                     <a href="#">Pages <span><i
