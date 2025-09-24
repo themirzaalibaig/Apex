@@ -1,0 +1,56 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Cursor Rules for Laravel + Livewire + Flux UI
+
+These rules guide how Cursor AI should assist inside this project.
+
+---
+
+## 🔒 General Rules
+- ❌ Do **NOT** create any markdown (`.md`) files unless I explicitly request it.
+- ❌ Do **NOT** create demo/example files, scaffolding, or documentation without my permission.
+- ✅ Only generate code/files that I directly ask for.
+- ✅ Always confirm before adding new dependencies.
+- ✅ Ask me for clarification if something is ambiguous.
+
+---
+
+## 🖥️ Tech Stack
+- Backend: **Laravel (PHP 8+)**
+- Components: **Livewire**
+- UI: **Flux UI**
+- Database: Laravel Eloquent ORM & migrations
+
+---
+
+## 📐 Coding Standards
+- Follow **Laravel best practices** for controllers, models, migrations, factories, and Livewire components.
+- Use **Flux UI conventions** consistently in Blade templates.
+- Write **strictly typed PHP 8+** wherever possible.
+- Follow **PSR-12 formatting**.
+- Add **docblocks for public methods**.
+- Keep code **readable and maintainable**, not overly compact.
+
+---
+
+## ⚡ Livewire Rules
+- Keep components **small and focused**.
+- Use correct **binding between backend and frontend**.
+- Respect **Laravel naming conventions**.
+- Avoid adding extra demo props or example states.
+
+---
+
+## 🧪 Testing
+- Framework: **Pest** (preferred for Laravel).
+- Write **unit + feature tests** alongside real functionality.
+- ❌ Do NOT create demo/sample tests unless I explicitly request them.
+
+---
+
+## 🌱 Git
+- Use **conventional commits**.
+- Sign-off not required.
