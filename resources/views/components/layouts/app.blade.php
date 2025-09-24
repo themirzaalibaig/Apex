@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{{ $title ?? 'Apex SoftBuild | Solutions that scale with you' }}</title>
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     @php
         $isAdmin = request()->is('admin/*') || request()->is('admin');
         $isAuthPage = request()->is('login') || $isAdmin;
@@ -45,6 +45,7 @@
         {{ $slot }}
     @endif
 
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     @if ($isAuthPage)
         @fluxScripts
     @else
@@ -54,6 +55,7 @@
         @vite('resources/js/main.js')
     @endif
 
+    @include('components.layouts.partials.toast')
     @yield('scripts')
 </body>
 

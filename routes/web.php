@@ -20,7 +20,7 @@ Route::get('/testimonials', Testimonials::class)->name('testimonials');
 Route::get('/blog', Blog::class)->name('blog');
 Route::get('/contact', Contact::class)->name('contact');
 
-Route::get('/login', Login::class)->name('login');
+Route::middleware('guest')->get('/login', Login::class)->name('login');
 
 
 Route::middleware(["auth"])->group(function () {
