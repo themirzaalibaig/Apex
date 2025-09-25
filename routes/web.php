@@ -6,6 +6,7 @@ use App\Livewire\Admin\Service;
 use App\Livewire\Admin\Service\Create;
 use App\Livewire\Admin\Service\Edit;
 use App\Livewire\Admin\Service\Index;
+use App\Livewire\Admin\Service\View;
 use App\Livewire\Home;
 use App\Livewire\Services;
 use App\Livewire\Portfolio;
@@ -32,6 +33,7 @@ Route::middleware(["auth"])->prefix('admin')->group(function () {
     Route::prefix('services')->group(function () {
         Route::get('/', Index::class)->name('admin.services');
         Route::get('/create', Create::class)->name('admin.services.create');
+        Route::get('/{service}', View::class)->name('admin.services.view');
         Route::get('/{service}/edit', Edit::class)->name('admin.services.edit');
     });
 });

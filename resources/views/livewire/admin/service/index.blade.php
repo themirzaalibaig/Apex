@@ -1,4 +1,22 @@
 <div class="p-6">
+    @if (session()->has('success'))
+        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
+            <div class="flex items-center gap-2">
+                <flux:icon name="check-circle" class="w-5 h-5 text-green-600 dark:text-green-400" />
+                <span class="text-green-800 dark:text-green-200 font-medium">{{ session('success') }}</span>
+            </div>
+        </div>
+    @endif
+
+    @if (session()->has('error'))
+        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+            <div class="flex items-center gap-2">
+                <flux:icon name="exclamation-triangle" class="w-5 h-5 text-red-600 dark:text-red-400" />
+                <span class="text-red-800 dark:text-red-200 font-medium">{{ session('error') }}</span>
+            </div>
+        </div>
+    @endif
+
     <div class="flex justify-between items-center mb-6">
 <div>
             <flux:heading size="xl">Services Management</flux:heading>
@@ -60,7 +78,24 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex flex-wrap gap-1">
-                                   {{ $service->tags }}
+                                    @php
+                                        $tagColors = [
+                                            'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                                            'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                                            'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                                            'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                                            'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
+                                            'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200',
+                                            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                                            'bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200',
+                                        ];
+                                        $tags = array_filter(array_map('trim', explode(',', $service->tags)));
+                                    @endphp
+                                    @foreach($tags as $i => $tag)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $tagColors[$i % count($tagColors)] }}">
+                                            {{ $tag }}
+                                        </span>
+                                    @endforeach
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -89,6 +124,16 @@
                                     <flux:button
                                         variant="ghost"
                                         size="sm"
+                                        icon="eye"
+                                        class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                                        title="View Service"
+                                        href="{{ route('admin.services.view', $service->id) }}"
+                                        wire:navigate
+                                    >
+                                    </flux:button>
+                                    <flux:button
+                                        variant="ghost"
+                                        size="sm"
                                         icon="pencil"
                                         class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
                                         title="Edit Service"
@@ -102,8 +147,7 @@
                                         icon="trash"
                                         class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                                         title="Delete Service"
-                                        wire:click="deleteService({{ $service->id }})"
-                                        wire:confirm="Are you sure you want to delete this service?"
+                                        wire:click="confirmDelete({{ $service->id }})"
                                     >
                                     </flux:button>
                                 </div>
@@ -148,5 +192,43 @@
                 </flux:button>
             </div>
         </div>
+    @endif
+
+    <!-- Delete Confirmation Modal -->
+    @if($showDeleteModal)
+        <flux:modal wire:model="showDeleteModal" class="max-w-md">
+            <div class="p-6">
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-4">
+                    <flux:heading size="lg">Confirm Delete</flux:heading>
+                </div>
+
+                <!-- Body -->
+                <div class="flex items-start gap-3 mb-6">
+                    <div class="flex-shrink-0 w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                        <flux:icon name="exclamation-triangle" class="w-5 h-5 text-red-600 dark:text-red-400" />
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-zinc-900 dark:text-white mb-2">
+                            Are you sure you want to delete the service
+                            <span class="font-semibold">"{{ $serviceToDelete?->name }}"</span>?
+                        </p>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400">
+                            This action cannot be undone. All associated data will be permanently removed.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="flex items-center justify-end gap-3">
+                    <flux:button variant="ghost" wire:click="closeDeleteModal">
+                        Cancel
+                    </flux:button>
+                    <flux:button variant="danger" wire:click="deleteService">
+                        Delete Service
+                    </flux:button>
+                </div>
+            </div>
+        </flux:modal>
     @endif
 </div>

@@ -120,7 +120,6 @@
                             Cancel
                         </flux:button>
                         <flux:button type="submit" variant="primary" class="px-6 flex items-center flex-row gap-2">
-                            <flux:icon name="plus" class="w-4 h-4 " />
                             Create Service
                         </flux:button>
                     </div>
