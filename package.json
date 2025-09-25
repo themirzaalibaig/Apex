@@ -29,6 +29,7 @@
         "owl.carousel": "2.3.4",
         "slick-slider": "^1.8.2",
         "swiper": "11.1.15",
+        "tailwind-scrollbar": "^4.0.2",
         "waypoints": "^4.0.1"
     }
 }

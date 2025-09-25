@@ -24,7 +24,7 @@
     @yield('styles')
 </head>
 
-<body @yield('body-attributes', 'class=min-h-screen bg-white dark:bg-zinc-800')>
+<body @if ($isAuthPage) class="bg-white dark:bg-zinc-900 min-h-screen" @endif @yield('body-attributes')>
     @if ($isAuthPage)
         @if ($isAdmin)
             @include('components.layouts.partials.admin.sidebar')
