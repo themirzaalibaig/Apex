@@ -22,11 +22,14 @@ class TagsInput extends Component
         'input.max' => 'Each tag can have maximum :max characters.',
     ];
 
-    public function mount($initialTags = '', $maxTags = 10, $maxTagLength = 50)
+    public $wireModel = '';
+
+    public function mount($initialTags = '', $maxTags = 10, $maxTagLength = 50, $wireModel = '')
     {
         $this->initialTags = $initialTags;
         $this->maxTags = $maxTags;
         $this->maxTagLength = $maxTagLength;
+        $this->wireModel = $wireModel;
 
         if (!empty($initialTags)) {
             $this->tags = array_filter(array_map('trim', explode(',', $initialTags)));
@@ -81,7 +84,13 @@ class TagsInput extends Component
 
     public function emitTagString()
     {
-        $this->dispatch('tagsUpdated', implode(',', $this->tags));
+        $tagString = implode(',', $this->tags);
+        $this->dispatch('tagsUpdated', $tagString);
+
+        // Also update the parent component property directly
+        if (!empty($this->wireModel)) {
+            $this->dispatch('updateParentProperty', $this->wireModel, $tagString);
+        }
     }
 
     public function render()
