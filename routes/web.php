@@ -3,6 +3,9 @@
 use App\Livewire\About;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Service;
+use App\Livewire\Admin\Service\Create;
+use App\Livewire\Admin\Service\Edit;
+use App\Livewire\Admin\Service\Index;
 use App\Livewire\Home;
 use App\Livewire\Services;
 use App\Livewire\Portfolio;
@@ -11,7 +14,7 @@ use App\Livewire\Blog;
 use App\Livewire\Contact;
 use App\Livewire\Login;
 use Illuminate\Support\Facades\Route;
-
+use Phiki\Phast\Root;
 
 Route::get('/', Home::class)->name('home');
 Route::get('/about', About::class)->name('about');
@@ -26,5 +29,9 @@ Route::middleware('guest')->get('/login', Login::class)->name('login');
 
 Route::middleware(["auth"])->prefix('admin')->group(function () {
     Route::get('/', Dashboard::class)->name('dashboard');
-    Route::get('/services', Service::class)->name('admin.services');
+    Route::prefix('services')->group(function () {
+        Route::get('/', Index::class)->name('admin.services');
+        Route::get('/create', Create::class)->name('admin.services.create');
+        Route::get('/{service}/edit', Edit::class)->name('admin.services.edit');
+    });
 });

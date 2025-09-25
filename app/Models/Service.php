@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Service extends Model
@@ -14,16 +12,8 @@ class Service extends Model
         'slug',
         'description',
         'status',
+        'tags',
     ];
-
-    /**
-     * Get the service tags for the service.
-     */
-    public function serviceTags(): HasMany
-    {
-        return $this->hasMany(ServiceTag::class);
-    }
-
     /**
      * Get the images for the service.
      */
