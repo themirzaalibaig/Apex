@@ -13,124 +13,39 @@
 
         <div class="row">
             <div class="col-lg-12">
+                @forelse ($services as $service)
+                @php
+                    $tags = explode(',', $service->tags);
+                @endphp
                 <div class="service-branding-boxesarea" data-aos="fade-up" data-aos-duration="900">
                     <div class="service-brand-head">
-                        <h2><a href="">Branding Identity</a></h2>
+                        <h2><a href="">{{ $service->name }}</a></h2>
                         <div class="space8"></div>
                         <ul class="service-list">
+                            @foreach ($tags as $tag)
                             <li>
-                                <a href="#">#BrandIdentityDesign</a>
+                                <a href="#">#{{ $tag }}</a>
                             </li>
-                            <li>
-                                <a href="#">#DesignYourBrand</a>
-                            </li>
-                        </ul>
-                        <ul class="service-list">
-                            <li>
-                                <a href="#">#LogoAndBranding</a>
-                            </li>
-                            <li>
-                                <a href="#">#BrandRecognition</a>
-                            </li>
+                            @endforeach
                         </ul>
                     </div>
                     <div class="hidden-img">
-                        <img src="/img/all-images/service/service-img1.png" alt="" />
+                        @php
+                            $image = $service->images->first();
+                            $imagePath = $image && $image->image ? '/storage/' . $image->image : '/img/all-images/service/service-img1.png';
+                        @endphp
+                        <img src="{{ $imagePath }}" alt="{{ $service->name ?? 'Service Image' }}" />
                     </div>
                     <div class="arrow">
                         <a href=""><i class="fa-solid fa-arrow-right"></i></a>
                     </div>
                 </div>
-
                 <div class="space60"></div>
-                <div class="service-branding-boxesarea" data-aos="fade-up" data-aos-duration="1000">
-                    <div class="service-brand-head">
-                        <h2><a href="">E-commerce Shop</a></h2>
-                        <div class="space8"></div>
-                        <ul class="service-list">
-                            <li>
-                                <a href="#">#EcommerceExperts</a>
-                            </li>
-                            <li>
-                                <a href="#">#DesignYourBrand</a>
-                            </li>
-                        </ul>
-                        <ul class="service-list">
-                            <li>
-                                <a href="#">#ShopFromHome</a>
-                            </li>
-                            <li>
-                                <a href="#">#DiscoverAndShop</a>
-                            </li>
-                        </ul>
+                @empty
+                    <div>
+                        <h4>No services found</h4>
                     </div>
-                    <div class="hidden-img">
-                        <img src="/img/all-images/service/service-img2.png" alt="" />
-                    </div>
-                    <div class="arrow">
-                        <a href=""><i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="space60"></div>
-                <div class="service-branding-boxesarea" data-aos="fade-up" data-aos-duration="1100">
-                    <div class="service-brand-head">
-                        <h2><a href="">ui/ux designer</a></h2>
-                        <div class="space8"></div>
-                        <ul class="service-list">
-                            <li>
-                                <a href="#">#DesignInspiration</a>
-                            </li>
-                            <li>
-                                <a href="#">#UserCenteredDesign</a>
-                            </li>
-                        </ul>
-                        <ul class="service-list">
-                            <li>
-                                <a href="#">#CreativeDesign</a>
-                            </li>
-                            <li>
-                                <a href="#">#DesignThinking</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="hidden-img">
-                        <img src="/img/all-images/service/service-img3.png" alt="" />
-                    </div>
-                    <div class="arrow">
-                        <a href=""><i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="space60"></div>
-                <div class="service-branding-boxesarea" data-aos="fade-up" data-aos-duration="1200">
-                    <div class="service-brand-head">
-                        <h2><a href="">Digital Marketing</a></h2>
-                        <div class="space8"></div>
-                        <ul class="service-list">
-                            <li>
-                                <a href="#">#WebDevelopment</a>
-                            </li>
-                            <li>
-                                <a href="#">#FrontendDevelopment</a>
-                            </li>
-                        </ul>
-                        <ul class="service-list">
-                            <li>
-                                <a href="#">#BackendDevelopment</a>
-                            </li>
-                            <li>
-                                <a href="#">#ProgrammingLife</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="hidden-img">
-                        <img src="/img/all-images/service/service-img4.png" alt="" />
-                    </div>
-                    <div class="arrow">
-                        <a href=""><i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </div>
+                @endforelse
 
                 <div class="space100"></div>
                 <div class="started-btn" data-aos="zoom-in" data-aos-duration="1000">
