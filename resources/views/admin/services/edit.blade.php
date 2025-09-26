@@ -19,7 +19,9 @@
             </div>
 
             <!-- Card Body -->
-            <form wire:submit="save" class="p-6 space-y-8">
+            <form action="{{ route('services.update', $service->id) }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-8">
+                @csrf
+                @method('PUT')
                 @if (session()->has('error'))
                 <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
                     <div class="flex items-center gap-2">
@@ -51,11 +53,15 @@
                             <flux:input
                                 id="name"
                                 type="text"
-                                wire:model.defer="name"
+                                name="name"
+                                value="{{ old('name', $service->name) }}"
                                 required
                                 placeholder="Enter service name"
                                 class="w-full"
                             />
+                            @error('name')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="space-y-2">
@@ -63,11 +69,15 @@
                             <flux:input
                                 id="slug"
                                 type="text"
-                                wire:model.defer="slug"
+                                name="slug"
+                                value="{{ old('slug', $service->slug) }}"
                                 required
                                 placeholder="service-slug"
                                 class="w-full"
                             />
+                            @error('slug')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
@@ -75,11 +85,14 @@
                         <flux:label for="description" class="text-zinc-700 dark:text-zinc-300 font-medium">Description</flux:label>
                         <flux:textarea
                             id="description"
-                            wire:model.defer="description"
+                            name="description"
                             placeholder="Describe the service in detail..."
                             class="w-full"
                             rows="4"
-                        ></flux:textarea>
+                        >{{ old('description', $service->description) }}</flux:textarea>
+                        @error('description')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
 
@@ -93,12 +106,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <flux:label for="status" required class="text-zinc-700 dark:text-zinc-300 font-medium">Status</flux:label>
-                            <x-admin.toggle-switch :status="$status" name="status" />
+                            <x-toggle-switch :status="$service->status" name="status" />
+                            @error('status')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="space-y-2">
                             <flux:label for="tags" required class="text-zinc-700 dark:text-zinc-300 font-medium">Tags</flux:label>
-                            <x-admin.tags-input
+                            <x-tags-input
                                 :initial-tags="$tags"
                                 :max-tags="10"
                                 :max-tag-length="50"
@@ -108,6 +124,38 @@
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
                             @enderror
                         </div>
+                    </div>
+                </div>
+
+                <!-- Images Section -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <flux:icon name="photo" class="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                        <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Images</h4>
+                    </div>
+
+                    <!-- Current Image Display -->
+                    @if($service->images->count() > 0)
+                        <div class="space-y-4">
+                            <div class="text-sm text-zinc-600 dark:text-zinc-400">Current Image:</div>
+                            @foreach($service->images as $image)
+                                <div class="flex items-center gap-4 p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600">
+                                    <img src="{{ Storage::url($image->image) }}" alt="{{ $image->alt }}" class="w-20 h-20 object-cover rounded-lg">
+                                    <div class="flex-1">
+                                        <div class="font-medium text-zinc-900 dark:text-white">{{ $image->name }}</div>
+                                        <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ $image->title }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <!-- Image Uploader -->
+                    <div class="bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600 p-6">
+                        <div class="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
+                            {{ $service->images->count() > 0 ? 'Upload a new image to replace the current one:' : 'Upload an image for this service:' }}
+                        </div>
+                        <x-admin.image-uploader />
                     </div>
                 </div>
 
@@ -124,8 +172,7 @@
                         <flux:button
                             type="button"
                             variant="outline"
-                            href="{{ route('services.index') }}"
-                            wire:navigate
+                            onclick="window.location.href='{{ route('services.index') }}'"
                             class="px-6"
                         >
                             <flux:icon name="x-mark" class="w-4 h-4 mr-2" />

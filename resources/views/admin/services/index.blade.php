@@ -132,7 +132,6 @@
                                         class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                                         title="View Service"
                                         href="{{ route('services.show', $service->id) }}"
-                                        wire:navigate
                                     >
                                     </flux:button>
                                     <flux:button
@@ -142,7 +141,6 @@
                                         class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
                                         title="Edit Service"
                                         href="{{ route('services.edit', $service->id) }}"
-                                        wire:navigate
                                     >
                                     </flux:button>
                                     <flux:button
@@ -151,7 +149,7 @@
                                         icon="trash"
                                         class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                                         title="Delete Service"
-                                        wire:click="confirmDelete({{ $service->id }})"
+                                        onclick="confirmDelete({{ $service->id }}, '{{ $service->name }}')"
                                     >
                                     </flux:button>
                                 </div>
@@ -198,9 +196,9 @@
         </div>
     @endif
 
-    {{-- <!-- Delete Confirmation Modal -->
-    @if($showDeleteModal)
-        <flux:modal wire:model="showDeleteModal" class="max-w-md">
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-700 max-w-md w-full mx-4">
             <div class="p-6">
                 <!-- Header -->
                 <div class="flex items-center justify-between mb-4">
@@ -215,7 +213,7 @@
                     <div class="flex-1">
                         <p class="text-zinc-900 dark:text-white mb-2">
                             Are you sure you want to delete the service
-                            <span class="font-semibold">"{{ $serviceToDelete?->name }}"</span>?
+                            <span class="font-semibold" id="serviceName"></span>?
                         </p>
                         <p class="text-sm text-zinc-500 dark:text-zinc-400">
                             This action cannot be undone. All associated data will be permanently removed.
@@ -225,15 +223,64 @@
 
                 <!-- Footer -->
                 <div class="flex items-center justify-end gap-3">
-                    <flux:button variant="ghost" wire:click="closeDeleteModal">
+                    <flux:button variant="ghost" onclick="closeDeleteModal()">
                         Cancel
                     </flux:button>
-                    <flux:button variant="danger" wire:click="deleteService">
+                    <flux:button variant="danger" onclick="deleteService()">
                         Delete Service
                     </flux:button>
                 </div>
             </div>
-        </flux:modal>
-    @endif --}}
+        </div>
+    </div>
+
+    <script>
+        let serviceToDelete = null;
+
+        function confirmDelete(serviceId, serviceName) {
+            serviceToDelete = serviceId;
+            document.getElementById('serviceName').textContent = `"${serviceName}"`;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+            serviceToDelete = null;
+        }
+
+        function deleteService() {
+            if (serviceToDelete) {
+                // Create a form and submit it
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/services/${serviceToDelete}`;
+
+                // Add CSRF token
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+
+                // Add method override
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('deleteModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDeleteModal();
+            }
+        });
+    </script>
 </div>
 @endsection

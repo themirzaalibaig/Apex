@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -48,8 +49,8 @@ class ServiceController extends Controller
         if ($request->hasFile('image')) {
             $path = 'services';
             $disk = 'public';
-            $filename = $request->imageName ? $request->imageName : $request->name . '.';
-            $image = $request->file('image')->storeAs($path, $filename . $request->image->getClientOriginalExtension(),$disk);
+            $filename = $request->imageName ? $request->imageName : $request->name;
+            $image = $request->file('image')->storeAs($path, $filename . '.' . $request->image->getClientOriginalExtension(),$disk);
             $service->images()->create([
                 'image' => $image,
                 'name' => $request->imageName,
@@ -76,8 +77,12 @@ class ServiceController extends Controller
      */
     public function edit(string $id)
     {
-        $service = Service::with('images')->find($id);
-        return view('admin.services.edit', compact('service'));
+        $service = Service::with('images')->findOrFail($id);
+
+        // Parse tags from comma-separated string to array
+        $tags = $service->tags ? explode(',', $service->tags) : [];
+
+        return view('admin.services.edit', compact('service', 'tags'));
     }
 
     /**
@@ -85,7 +90,52 @@ class ServiceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255',
+            'description' => 'required|string|max:255',
+            'status' => 'required|in:active,inactive',
+            'tags' => 'required|string|max:255',
+        ]);
+
+        $service = Service::findOrFail($id);
+
+        $service->update([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'description' => $request->description,
+            'status' => $request->status,
+            'tags' => $request->tags,
+        ]);
+
+        // Handle image update if new image is uploaded
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($service->images()->exists()) {
+                $oldImage = $service->images()->first();
+                if ($oldImage && Storage::disk('public')->exists($oldImage->image)) {
+                    Storage::disk('public')->delete($oldImage->image);
+                }
+                $oldImage->delete();
+            }
+
+            // Store new image
+            $path = 'services';
+            $disk = 'public';
+            $filename = $request->imageName ? $request->imageName : $request->name;
+            $image = $request->file('image')->storeAs($path, $filename . '.' . $request->image->getClientOriginalExtension(), $disk);
+
+            $service->images()->create([
+                'image' => $image,
+                'name' => $request->imageName,
+                'alt' => $request->imageAlt,
+                'title' => $request->imageTitle,
+                'caption' => $request->imageCaption,
+                'keywords' => $request->imageKeywords,
+            ]);
+        }
+
+        return redirect()->route('services.index')->with('success', 'Service updated successfully');
     }
 
     /**
@@ -93,7 +143,15 @@ class ServiceController extends Controller
      */
     public function destroy(string $id)
     {
-        $service = Service::with('images')->find($id);
+        $service = Service::with('images')->findOrFail($id);
+
+        // Delete associated images and files
+        foreach ($service->images as $image) {
+            if (Storage::disk('public')->exists($image->image)) {
+                Storage::disk('public')->delete($image->image);
+            }
+        }
+
         $service->delete();
         return redirect()->route('services.index')->with('success', 'Service deleted successfully');
     }
