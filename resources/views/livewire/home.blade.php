@@ -5,7 +5,7 @@
     <livewire:components.home.hero />
     @include('components.layouts.partials.slider')
     <livewire:components.home.about />
-    @include('components.layouts.partials.others-area')
+    @include('components.layouts.partials.others-area',["services"=>$services])
     <livewire:components.home.service />
     <livewire:components.home.portfolio />
     <livewire:components.home.testimonial />
