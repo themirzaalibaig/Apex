@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ServiceController;
 use App\Livewire\About;
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\Service;
@@ -29,11 +30,12 @@ Route::middleware('guest')->get('/login', Login::class)->name('login');
 
 
 Route::middleware(["auth"])->prefix('admin')->group(function () {
-    Route::get('/', Dashboard::class)->name('dashboard');
-    Route::prefix('services')->group(function () {
-        Route::get('/', Index::class)->name('admin.services');
-        Route::get('/create', Create::class)->name('admin.services.create');
-        Route::get('/{service}', View::class)->name('admin.services.view');
-        Route::get('/{service}/edit', Edit::class)->name('admin.services.edit');
-    });
+    Route::view('/', "admin.dashboard")->name('dashboard');
+    Route::resource('services', ServiceController::class);
+    // Route::prefix('services')->group(function () {
+    //     Route::get('/', Index::class)->name('admin.services');
+    //     Route::get('/create', Create::class)->name('admin.services.create');
+    //     Route::get('/{service}', View::class)->name('admin.services.view');
+    //     Route::get('/{service}/edit', Edit::class)->name('admin.services.edit');
+    // });
 });

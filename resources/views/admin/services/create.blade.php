@@ -1,3 +1,6 @@
+@extends('components.layouts.admin')
+
+@section('content')
 <div class=" py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Main Card -->
@@ -6,17 +9,18 @@
             <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-zinc-100 dark:bg-zinc-900/30 rounded-lg flex items-center justify-center">
-                        <flux:icon name="pencil" class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+                        <flux:icon name="cog" class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
                     </div>
                     <div>
-                        <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Edit Service</h3>
-                        <p class="text-sm text-zinc-500 dark:text-zinc-400">Update the information for {{ $service->name }}</p>
+                        <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Create New Service</h3>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400">Fill in the information below to create your service</p>
                     </div>
                 </div>
             </div>
 
             <!-- Card Body -->
-            <form wire:submit="save" class="p-6 space-y-8">
+            <form action="{{ route('services.store') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-8">
+                @csrf
                 @if (session()->has('error'))
                 <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
                     <div class="flex items-center gap-2">
@@ -24,17 +28,7 @@
                         <span class="text-red-800 dark:text-red-200 font-medium">{{ session('error') }}</span>
                     </div>
                 </div>
-                @endif
-
-                @if (session()->has('success'))
-                <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
-                    <div class="flex items-center gap-2">
-                        <flux:icon name="check-circle" class="w-5 h-5 text-green-600 dark:text-green-400" />
-                        <span class="text-green-800 dark:text-green-200 font-medium">{{ session('success') }}</span>
-                    </div>
-                </div>
-                @endif
-
+            @endif
                 <!-- Basic Information Section -->
                 <div class="space-y-6">
                     <div class="flex items-center gap-2 mb-4">
@@ -48,8 +42,9 @@
                             <flux:input
                                 id="name"
                                 type="text"
-                                wire:model.defer="name"
+                                name="name"
                                 required
+                                value="{{ old('name') }}"
                                 placeholder="Enter service name"
                                 class="w-full"
                             />
@@ -60,8 +55,9 @@
                             <flux:input
                                 id="slug"
                                 type="text"
-                                wire:model.defer="slug"
+                                name="slug"
                                 required
+                                value="{{ old('slug') }}"
                                 placeholder="service-slug"
                                 class="w-full"
                             />
@@ -72,13 +68,18 @@
                         <flux:label for="description" class="text-zinc-700 dark:text-zinc-300 font-medium">Description</flux:label>
                         <flux:textarea
                             id="description"
-                            wire:model.defer="description"
+                            name="description"
+                            value="{{ old('description') }}"
                             placeholder="Describe the service in detail..."
                             class="w-full"
                             rows="4"
                         ></flux:textarea>
+                        @error('description')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
+                <x-image-uploader name="image" label="Upload Image" description="Upload an image for the service" />
 
                 <!-- Configuration Section -->
                 <div class="space-y-6">
@@ -90,21 +91,17 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <flux:label for="status" required class="text-zinc-700 dark:text-zinc-300 font-medium">Status</flux:label>
-                            <livewire:components.admin.toggle-switch wire:model.defer="status" name="status" :status="$status" />
+                            <x-toggle-switch :status="$status" name="status" />
                         </div>
 
                         <div class="space-y-2">
                             <flux:label for="tags" required class="text-zinc-700 dark:text-zinc-300 font-medium">Tags</flux:label>
-                            <livewire:components.admin.tags-input
-                                :initial-tags="$tags"
+                            <x-tags-input
+                                :initial-tags="[]"
                                 :max-tags="10"
                                 :max-tag-length="50"
-                                wire-model="tags"
-                                x-on:tags-updated="$wire.updateTags($event.detail)"
+                                name="tags"
                             />
-                            @error('tags')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror
                         </div>
                     </div>
                 </div>
@@ -122,7 +119,7 @@
                         <flux:button
                             type="button"
                             variant="outline"
-                            href="{{ route('admin.services') }}"
+                            href="{{ route('services.index') }}"
                             wire:navigate
                             class="px-6"
                         >
@@ -130,8 +127,7 @@
                             Cancel
                         </flux:button>
                         <flux:button type="submit" variant="primary" class="px-6 flex items-center flex-row gap-2">
-                            <flux:icon name="check" class="w-4 h-4" />
-                            Update Service
+                            Create Service
                         </flux:button>
                     </div>
                 </div>
@@ -139,3 +135,5 @@
         </div>
     </div>
 </div>
+
+@endsection

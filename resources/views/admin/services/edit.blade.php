@@ -1,3 +1,6 @@
+@extends('components.layouts.admin')
+
+@section('content')
 <div class=" py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Main Card -->
@@ -6,11 +9,11 @@
             <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-zinc-100 dark:bg-zinc-900/30 rounded-lg flex items-center justify-center">
-                        <flux:icon name="cog" class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+                        <flux:icon name="pencil" class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
                     </div>
                     <div>
-                        <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Create New Service</h3>
-                        <p class="text-sm text-zinc-500 dark:text-zinc-400">Fill in the information below to create your service</p>
+                        <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Edit Service</h3>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400">Update the information for {{ $service->name }}</p>
                     </div>
                 </div>
             </div>
@@ -24,7 +27,17 @@
                         <span class="text-red-800 dark:text-red-200 font-medium">{{ session('error') }}</span>
                     </div>
                 </div>
-            @endif
+                @endif
+
+                @if (session()->has('success'))
+                <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
+                    <div class="flex items-center gap-2">
+                        <flux:icon name="check-circle" class="w-5 h-5 text-green-600 dark:text-green-400" />
+                        <span class="text-green-800 dark:text-green-200 font-medium">{{ session('success') }}</span>
+                    </div>
+                </div>
+                @endif
+
                 <!-- Basic Information Section -->
                 <div class="space-y-6">
                     <div class="flex items-center gap-2 mb-4">
@@ -80,17 +93,16 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <flux:label for="status" required class="text-zinc-700 dark:text-zinc-300 font-medium">Status</flux:label>
-                            <livewire:components.admin.toggle-switch wire:model.defer="status" name="status" :status="$status" />
+                            <x-admin.toggle-switch :status="$status" name="status" />
                         </div>
 
                         <div class="space-y-2">
                             <flux:label for="tags" required class="text-zinc-700 dark:text-zinc-300 font-medium">Tags</flux:label>
-                            <livewire:components.admin.tags-input
+                            <x-admin.tags-input
                                 :initial-tags="$tags"
                                 :max-tags="10"
                                 :max-tag-length="50"
-                                wire-model="tags"
-                                x-on:tags-updated="$wire.updateTags($event.detail)"
+                                name="tags"
                             />
                             @error('tags')
                                 <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -112,7 +124,7 @@
                         <flux:button
                             type="button"
                             variant="outline"
-                            href="{{ route('admin.services') }}"
+                            href="{{ route('services.index') }}"
                             wire:navigate
                             class="px-6"
                         >
@@ -120,7 +132,8 @@
                             Cancel
                         </flux:button>
                         <flux:button type="submit" variant="primary" class="px-6 flex items-center flex-row gap-2">
-                            Create Service
+                            <flux:icon name="check" class="w-4 h-4" />
+                            Update Service
                         </flux:button>
                     </div>
                 </div>
@@ -128,3 +141,5 @@
         </div>
     </div>
 </div>
+
+@endsection

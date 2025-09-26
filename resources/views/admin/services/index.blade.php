@@ -1,3 +1,7 @@
+@extends('components.layouts.admin')
+
+@section('content')
+
 <div class="p-6">
     @if (session()->has('success'))
         <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6">
@@ -18,11 +22,11 @@
     @endif
 
     <div class="flex justify-between items-center mb-6">
-<div>
+        <div>
             <flux:heading size="xl">Services Management</flux:heading>
             <flux:text class="mt-2">Manage your services and their tags</flux:text>
         </div>
-        <flux:button variant="primary" icon="plus" href="{{ route('admin.services.create') }}" wire:navigate>
+        <flux:button variant="primary" icon="plus" href="{{ route('services.create') }}" wire:navigate>
             Add New Service
         </flux:button>
     </div>
@@ -127,7 +131,7 @@
                                         icon="eye"
                                         class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                                         title="View Service"
-                                        href="{{ route('admin.services.view', $service->id) }}"
+                                        href="{{ route('services.show', $service->id) }}"
                                         wire:navigate
                                     >
                                     </flux:button>
@@ -137,7 +141,7 @@
                                         icon="pencil"
                                         class="text-yellow-600 hover:text-yellow-900 dark:text-yellow-400 dark:hover:text-yellow-300"
                                         title="Edit Service"
-                                        href="{{ route('admin.services.edit', $service->id) }}"
+                                        href="{{ route('services.edit', $service->id) }}"
                                         wire:navigate
                                     >
                                     </flux:button>
@@ -194,7 +198,7 @@
         </div>
     @endif
 
-    <!-- Delete Confirmation Modal -->
+    {{-- <!-- Delete Confirmation Modal -->
     @if($showDeleteModal)
         <flux:modal wire:model="showDeleteModal" class="max-w-md">
             <div class="p-6">
@@ -230,5 +234,6 @@
                 </div>
             </div>
         </flux:modal>
-    @endif
+    @endif --}}
 </div>
+@endsection

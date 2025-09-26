@@ -9,7 +9,7 @@
         <flux:sidebar.item icon="home" href="{{ route('dashboard') }}" wire:navigate wire:current.exact="active">
             Home
         </flux:sidebar.item>
-        <flux:sidebar.item icon="document-text" href="{{ route('admin.services') }}" wire:navigate wire:current.exact="active">
+        <flux:sidebar.item icon="document-text" href="{{ route('services.index') }}" wire:navigate wire:current.exact="active">
             Services
         </flux:sidebar.item>
         <flux:sidebar.item icon="inbox" badge="12" href="#">Inbox</flux:sidebar.item>
