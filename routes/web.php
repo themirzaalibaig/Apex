@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TeamController;
@@ -36,6 +37,7 @@ Route::middleware(["auth"])->prefix('admin')->group(function () {
     Route::resource('services', ServiceController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('teams', TeamController::class);
+    Route::resource('faqs', FaqController::class);
     // Route::prefix('services')->group(function () {
     //     Route::get('/', Index::class)->name('admin.services');
     //     Route::get('/create', Create::class)->name('admin.services.create');

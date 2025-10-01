@@ -18,6 +18,9 @@
         <flux:sidebar.item icon="user-group" href="{{ route('teams.index') }}" wire:navigate wire:current.exact="active">
             Team
         </flux:sidebar.item>
+        <flux:sidebar.item icon="question-mark-circle" href="{{ route('faqs.index') }}" wire:navigate wire:current.exact="active">
+            FAQs
+        </flux:sidebar.item>
         <flux:sidebar.item icon="inbox" badge="12" href="#">Inbox</flux:sidebar.item>
         <flux:sidebar.group expandable icon="star" heading="Favorites" class="grid">
             <flux:sidebar.item href="#" wire:navigate wire:current="active">Marketing site</flux:sidebar.item>
