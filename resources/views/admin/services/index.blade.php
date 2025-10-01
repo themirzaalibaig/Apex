@@ -116,12 +116,25 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <i class="fas fa-images text-zinc-400 dark:text-zinc-500 mr-1"></i>
-                                    <span class="text-sm text-zinc-900 dark:text-white">
-                                        {{ $service->images->count() }} image(s)
-                                    </span>
-                                </div>
+                                @if($service->images->count() > 0)
+                                    <div class="flex items-center gap-1">
+                                        @foreach($service->images->take(3) as $image)
+                                            <img
+                                                src="{{ Storage::url($image->image) }}"
+                                                alt="{{ $image->alt }}"
+                                                class="w-[30px] h-[30px] object-cover rounded border border-zinc-200 dark:border-zinc-600"
+                                                title="{{ $image->name }}"
+                                            >
+                                        @endforeach
+                                        @if($service->images->count() > 3)
+                                            <span class="text-xs text-zinc-500 dark:text-zinc-400 ml-1">
+                                                +{{ $service->images->count() - 3 }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-sm text-zinc-400 dark:text-zinc-500">No images</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
@@ -256,11 +269,17 @@
                 form.action = `/admin/services/${serviceToDelete}`;
 
                 // Add CSRF token
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+                if (!csrfMeta) {
+                    console.error('CSRF token not found');
+                    alert('Error: CSRF token not found. Please refresh the page.');
+                    return;
+                }
+
                 const csrfInput = document.createElement('input');
                 csrfInput.type = 'hidden';
                 csrfInput.name = '_token';
-                csrfInput.value = csrfToken;
+                csrfInput.value = csrfMeta.getAttribute('content');
                 form.appendChild(csrfInput);
 
                 // Add method override
