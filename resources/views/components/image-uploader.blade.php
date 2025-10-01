@@ -1,129 +1,282 @@
 @props([
-    'name' => 'image',
-    'label' => 'Upload Image',
-    'description' => 'Click to select and upload an image'
+    'name' => 'images',
+    'label' => 'Upload Images',
+    'description' => 'Click to select and upload images',
+    'existingImages' => []
 ])
 
-<div
-    x-data="{
+@php
+    $componentId = uniqid('uploader_');
+@endphp
+
+<div class="w-full image-uploader-component" data-component-id="{{ $componentId }}">
+<script>
+(function() {
+    const componentId = '{{ $componentId }}';
+    const container = document.querySelector(`[data-component-id="${componentId}"]`);
+
+    const state = {
         showModal: false,
-        selectedFile: null,
-        imagePreview: null,
+        selectedFiles: [],
+        currentEditIndex: null,
         imageName: '',
         imageAlt: '',
         imageTitle: '',
         imageCaption: '',
         imageKeywords: '',
         dragging: false,
+        existingImages: {!! json_encode($existingImages) !!},
+        imagesToDelete: []
+    };
 
-        openModal() {
-            this.showModal = true;
-        },
+    function getAllImages() {
+        return [...state.existingImages, ...state.selectedFiles];
+    }
 
-        closeModal() {
-            this.showModal = false;
-        },
+    function render() {
+        // Update upload button visibility
+        const uploadBtn = container.querySelector('.upload-button-wrapper');
+        const previewGrid = container.querySelector('.preview-grid-wrapper');
 
-        resetAll() {
-            this.resetForm();
-            // Clear form inputs
-            const nameInput = document.querySelector('input[name=\'imageName\']');
-            const altInput = document.querySelector('input[name=\'imageAlt\']');
-            const titleInput = document.querySelector('input[name=\'imageTitle\']');
-            const captionInput = document.querySelector('textarea[name=\'imageCaption\']');
-            const keywordsInput = document.querySelector('input[name=\'imageKeywords\']');
-            const fileInput = document.querySelector('input[name=\'{{ $name }}\']');
-
-            if (nameInput) nameInput.value = '';
-            if (altInput) altInput.value = '';
-            if (titleInput) titleInput.value = '';
-            if (captionInput) captionInput.value = '';
-            if (keywordsInput) keywordsInput.value = '';
-            if (fileInput) fileInput.value = '';
-        },
-
-        resetForm() {
-            this.selectedFile = null;
-            this.imagePreview = null;
-            this.imageName = '';
-            this.imageAlt = '';
-            this.imageTitle = '';
-            this.imageCaption = '';
-            this.imageKeywords = '';
-        },
-
-        handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file) {
-                this.selectedFile = file;
-                this.imageName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
-                this.previewImage(file);
-            }
-        },
-
-        handleDrop(event) {
-            event.preventDefault();
-            this.dragging = false;
-
-            const files = event.dataTransfer.files;
-            if (files.length > 0) {
-                const file = files[0];
-                if (file.type.startsWith('image/')) {
-                    this.selectedFile = file;
-                    this.imageName = file.name.replace(/\.[^/.]+$/, '');
-                    this.previewImage(file);
-                }
-            }
-        },
-
-        previewImage(file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                this.imagePreview = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        },
-
-        saveImage() {
-            if (this.selectedFile) {
-                // Update form inputs with the metadata
-                const nameInput = document.querySelector('input[name=\'imageName\']');
-                const altInput = document.querySelector('input[name=\'imageAlt\']');
-                const titleInput = document.querySelector('input[name=\'imageTitle\']');
-                const captionInput = document.querySelector('textarea[name=\'imageCaption\']');
-                const keywordsInput = document.querySelector('input[name=\'imageKeywords\']');
-
-                if (nameInput) nameInput.value = this.imageName;
-                if (altInput) altInput.value = this.imageAlt;
-                if (titleInput) titleInput.value = this.imageTitle;
-                if (captionInput) captionInput.value = this.imageCaption;
-                if (keywordsInput) keywordsInput.value = this.imageKeywords;
-
-                // Dispatch custom event for parent components
-                if (typeof this.$dispatch === 'function') {
-                    this.$dispatch('image-selected', {
-                        file: this.selectedFile,
-                        name: this.imageName,
-                        alt: this.imageAlt,
-                        title: this.imageTitle,
-                        caption: this.imageCaption,
-                        keywords: this.imageKeywords,
-                        preview: this.imagePreview
-                    });
-                }
-
-                this.closeModal();
-            }
+        if (getAllImages().length === 0) {
+            if (uploadBtn) uploadBtn.style.display = 'block';
+            if (previewGrid) previewGrid.style.display = 'none';
+        } else {
+            if (uploadBtn) uploadBtn.style.display = 'none';
+            if (previewGrid) previewGrid.style.display = 'block';
         }
-    }"
-    class="w-full"
->
-    <!-- Upload Button -->
-    <div class="text-center">
+
+        // Render existing images
+        renderExistingImages();
+
+        // Render new images
+        renderNewImages();
+
+        // Update form data
+        updateFormData();
+        updateDeleteData();
+    }
+
+    function renderExistingImages() {
+        const existingContainer = container.querySelector('.existing-images-grid');
+        if (!existingContainer) return;
+
+        existingContainer.innerHTML = '';
+        state.existingImages.forEach((img, index) => {
+            const div = document.createElement('div');
+            div.className = 'relative group';
+            div.innerHTML = `
+                <img src="${img.url}" alt="${img.alt || ''}" class="w-full h-32 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700">
+                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                    <button type="button" onclick="window.imageUploader_${componentId}.removeExistingImage(${index})"
+                        class="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors" title="Remove image">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="absolute top-2 left-2 px-2 py-1 bg-blue-500 text-white text-xs rounded">Existing</div>
+            `;
+            existingContainer.appendChild(div);
+        });
+    }
+
+    function renderNewImages() {
+        const newContainer = container.querySelector('.new-images-grid');
+        if (!newContainer) return;
+
+        newContainer.innerHTML = '';
+        state.selectedFiles.forEach((img, index) => {
+            const div = document.createElement('div');
+            div.className = 'relative group';
+            div.innerHTML = `
+                <img src="${img.preview}" alt="${img.name}" class="w-full h-32 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700">
+                <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                    <button type="button" onclick="window.imageUploader_${componentId}.editImage(${index})"
+                        class="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors" title="Edit metadata">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                    </button>
+                    <button type="button" onclick="window.imageUploader_${componentId}.removeNewImage(${index})"
+                        class="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors" title="Remove image">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="absolute top-2 left-2 px-2 py-1 bg-green-500 text-white text-xs rounded">New</div>
+            `;
+            newContainer.appendChild(div);
+        });
+    }
+
+    function handleFileSelect(event) {
+        const files = Array.from(event.target.files);
+        files.forEach(file => {
+            if (file.type.startsWith('image/')) {
+                addFile(file);
+            }
+        });
+        event.target.value = '';
+    }
+
+    function addFile(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            state.selectedFiles.push({
+                file: file,
+                preview: e.target.result,
+                name: file.name.replace(/\.[^/.]+$/, ''),
+                alt: '',
+                title: '',
+                caption: '',
+                keywords: ''
+            });
+            render();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removeNewImage(index) {
+        state.selectedFiles.splice(index, 1);
+        render();
+    }
+
+    function removeExistingImage(index) {
+        const image = state.existingImages[index];
+        state.imagesToDelete.push(image.id);
+        state.existingImages.splice(index, 1);
+        render();
+    }
+
+    function editImage(index) {
+        const img = state.selectedFiles[index];
+        state.imageName = img.name;
+        state.imageAlt = img.alt;
+        state.imageTitle = img.title;
+        state.imageCaption = img.caption;
+        state.imageKeywords = img.keywords;
+        state.currentEditIndex = index;
+        openModal();
+    }
+
+    function openModal() {
+        const modal = container.querySelector('.metadata-modal');
+        const preview = container.querySelector('.modal-preview');
+
+        if (state.currentEditIndex !== null && state.selectedFiles[state.currentEditIndex]) {
+            preview.src = state.selectedFiles[state.currentEditIndex].preview;
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+
+        container.querySelector('#modal-imageName').value = state.imageName;
+        container.querySelector('#modal-imageAlt').value = state.imageAlt;
+        container.querySelector('#modal-imageTitle').value = state.imageTitle;
+        container.querySelector('#modal-imageCaption').value = state.imageCaption;
+        container.querySelector('#modal-imageKeywords').value = state.imageKeywords;
+
+        modal.style.display = 'flex';
+        state.showModal = true;
+    }
+
+    function closeModal() {
+        const modal = container.querySelector('.metadata-modal');
+        modal.style.display = 'none';
+        state.showModal = false;
+        state.currentEditIndex = null;
+        resetForm();
+    }
+
+    function resetForm() {
+        state.imageName = '';
+        state.imageAlt = '';
+        state.imageTitle = '';
+        state.imageCaption = '';
+        state.imageKeywords = '';
+    }
+
+    function saveMetadata() {
+        state.imageName = container.querySelector('#modal-imageName').value;
+        state.imageAlt = container.querySelector('#modal-imageAlt').value;
+        state.imageTitle = container.querySelector('#modal-imageTitle').value;
+        state.imageCaption = container.querySelector('#modal-imageCaption').value;
+        state.imageKeywords = container.querySelector('#modal-imageKeywords').value;
+
+        if (state.currentEditIndex !== null && state.currentEditIndex < state.selectedFiles.length) {
+            state.selectedFiles[state.currentEditIndex].name = state.imageName;
+            state.selectedFiles[state.currentEditIndex].alt = state.imageAlt;
+            state.selectedFiles[state.currentEditIndex].title = state.imageTitle;
+            state.selectedFiles[state.currentEditIndex].caption = state.imageCaption;
+            state.selectedFiles[state.currentEditIndex].keywords = state.imageKeywords;
+        }
+        closeModal();
+        render();
+    }
+
+    function updateFormData() {
+        const dt = new DataTransfer();
+        state.selectedFiles.forEach(img => {
+            dt.items.add(img.file);
+        });
+
+        const fileInput = container.querySelector('input[type="file"]');
+        if (fileInput) {
+            fileInput.files = dt.files;
+        }
+
+        const metadataContainer = container.querySelector('.metadata-inputs');
+        metadataContainer.innerHTML = '';
+
+        state.selectedFiles.forEach((img, index) => {
+            metadataContainer.innerHTML += `
+                <input type="text" name="imagesMetadata[${index}][name]" value="${img.name}" class="hidden">
+                <input type="text" name="imagesMetadata[${index}][alt]" value="${img.alt}" class="hidden">
+                <input type="text" name="imagesMetadata[${index}][title]" value="${img.title}" class="hidden">
+                <textarea name="imagesMetadata[${index}][caption]" class="hidden">${img.caption}</textarea>
+                <input type="text" name="imagesMetadata[${index}][keywords]" value="${img.keywords}" class="hidden">
+            `;
+        });
+    }
+
+    function updateDeleteData() {
+        const deleteInput = container.querySelector('input[name="imagesToDelete"]');
+        if (deleteInput) {
+            deleteInput.value = JSON.stringify(state.imagesToDelete);
+        }
+    }
+
+    // Expose functions globally for this component
+    window[`imageUploader_${componentId}`] = {
+        handleFileSelect,
+        removeNewImage,
+        removeExistingImage,
+        editImage,
+        saveMetadata,
+        closeModal
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        const fileInput = container.querySelector('input[type="file"]');
+        fileInput.addEventListener('change', handleFileSelect);
+        render();
+    });
+})();
+</script>
+    <!-- Hidden Input Fields for Form Submission -->
+    <input type="file" name="{{ $name }}[]" multiple accept="image/*" class="hidden file-input-main">
+    <input type="hidden" name="imagesToDelete" value="">
+    <div class="metadata-inputs"></div>
+
+    <!-- Upload Button (shown when no images) -->
+    <div class="upload-button-wrapper text-center">
         <button
             type="button"
-            @click="openModal()"
-            class="w-full py-8 bg-white rounded-lg dark:bg-white/10 border-2 border-dashed border-white/20 hover:border-zinc-400 cursor-pointer"
+            onclick="this.parentElement.parentElement.querySelector('.file-input-main').click()"
+            class="w-full py-8 bg-white rounded-lg dark:bg-white/10 border-2 border-dashed border-white/20 hover:border-zinc-400 cursor-pointer transition-colors"
         >
             <div class="flex flex-col items-center gap-3">
                 <flux:icon name="photo" class="w-8 h-8 text-zinc-500" />
@@ -135,157 +288,134 @@
         </button>
     </div>
 
-    <!-- Modal -->
-    <flux:modal x-model="showModal">
-        <div class="p-6">
-            <div class="mb-6">
-                <flux:heading size="lg">{{ $label }}</flux:heading>
-            </div>
-            <div class="space-y-6">
-                <!-- Drag & Drop Area -->
-                <div
-                    x-show="!selectedFile"
-                    @dragover.prevent="dragging = true"
-                    @dragleave.prevent="dragging = false"
-                    @drop.prevent="handleDrop($event)"
-                    :class="dragging ? 'border-blue-500 bg-blue-50' : 'border-white/20'"
-                    class="border-2 border-dashed rounded-lg p-8 text-center transition-colors"
-                >
-                    <input
-                        type="file"
-                        @change="handleFileSelect($event)"
-                        accept="image/*"
-                        class="hidden"
-                        x-ref="fileInput"
-                        name="{{ $name }}"
-                    >
+    <!-- Image Previews Grid -->
+    <div class="preview-grid-wrapper space-y-4" style="display: none;">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Existing Images Container -->
+            <div class="existing-images-grid contents"></div>
 
-                    <div class="flex flex-col items-center gap-4">
-                        <flux:icon name="photo" class="w-12 h-12 text-zinc-400" />
+            <!-- New Selected Images Container -->
+            <div class="new-images-grid contents"></div>
+        </div>
 
-                        <div>
-                            <p class="text-lg font-medium text-zinc-900 dark:text-white mb-2">
-                                Drop your image here or click to browse
-                            </p>
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
-                                PNG, JPG up to 2MB
-                            </p>
+        <!-- Add More Images Button -->
+        <div class="flex justify-center">
+            <button
+                type="button"
+                onclick="this.parentElement.parentElement.parentElement.querySelector('.file-input-main').click()"
+                class="px-6 py-3 bg-white dark:bg-zinc-700 border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-lg hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors flex items-center gap-2"
+            >
+                <flux:icon name="plus" class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+                <span class="text-sm font-medium text-zinc-900 dark:text-white">Add More Images</span>
+            </button>
+        </div>
+    </div>
 
-                            <flux:button
-                                type="button"
-                                variant="outline"
-                                @click="$refs.fileInput.click()"
-                            >
-                                <flux:icon name="photo" class="w-4 h-4 mr-2" />
-                                Select Image
-                            </flux:button>
-                        </div>
-                    </div>
+    <!-- Modal for Editing Image Metadata -->
+    <div class="metadata-modal fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-zinc-900 dark:text-white">Edit Image Metadata</h3>
                 </div>
 
-                <!-- Image Preview -->
-                <div x-show="imagePreview" class="text-center">
-                    <div class="relative inline-block group">
-                        <img
-                            :src="imagePreview"
-                            alt="Preview"
-                            class="max-w-full max-h-64 mx-auto rounded-lg shadow-md"
-                        >
-                        <!-- Hover Overlay -->
-                        <div class="absolute inset-0 bg-black/50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                            <flux:button
-                                type="button"
-                                variant="outline"
-                                @click="$refs.fileInput.click()"
-                                class="bg-white text-black hover:bg-gray-100"
-                            >
-                                <flux:icon name="photo" class="w-4 h-4 mr-2" />
-                                Change Image
-                            </flux:button>
-                        </div>
-                    </div>
+                <!-- Image Preview in Modal -->
+                <div class="mb-6 text-center">
+                    <img
+                        src=""
+                        alt="Preview"
+                        class="modal-preview max-w-full max-h-48 mx-auto rounded-lg shadow-md"
+                        style="display: none;"
+                    >
                 </div>
 
                 <!-- Metadata Form -->
-                <div x-show="selectedFile" class="space-y-4">
-                    <div class="flex justify-between items-center">
-                        <flux:heading size="md">Image Metadata</flux:heading>
-                    </div>
-
+                <div class="space-y-4">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <flux:label for="imageName" required>Name</flux:label>
-                            <flux:input
-                                id="imageName"
-                                x-model="imageName"
+                            <label for="modal-imageName" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Name <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="modal-imageName"
                                 placeholder="Enter image name"
                                 required
-                                name="imageName"
+                                class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
 
                         <div>
-                            <flux:label for="imageAlt">Alt Text</flux:label>
-                            <flux:input
-                                id="imageAlt"
-                                x-model="imageAlt"
+                            <label for="modal-imageAlt" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                                Alt Text
+                            </label>
+                            <input
+                                type="text"
+                                id="modal-imageAlt"
                                 placeholder="Enter alt text for accessibility"
-                                name="imageAlt"
+                                class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <flux:label for="imageTitle">Title</flux:label>
-                        <flux:input
-                            id="imageTitle"
-                            x-model="imageTitle"
+                        <label for="modal-imageTitle" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                            Title
+                        </label>
+                        <input
+                            type="text"
+                            id="modal-imageTitle"
                             placeholder="Enter image title"
-                            name="imageTitle"
+                            class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                     </div>
 
                     <div>
-                        <flux:label for="imageCaption">Caption</flux:label>
-                        <flux:textarea
-                            id="imageCaption"
-                            x-model="imageCaption"
+                        <label for="modal-imageCaption" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                            Caption
+                        </label>
+                        <textarea
+                            id="modal-imageCaption"
                             placeholder="Enter image caption"
                             rows="3"
-                            name="imageCaption"
-                        />
+                            class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        ></textarea>
                     </div>
 
                     <div>
-                        <flux:label for="imageKeywords">Keywords (comma-separated)</flux:label>
-                        <flux:input
-                            id="imageKeywords"
-                            x-model="imageKeywords"
+                        <label for="modal-imageKeywords" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                            Keywords (comma-separated)
+                        </label>
+                        <input
+                            type="text"
+                            id="modal-imageKeywords"
                             placeholder="keyword1, keyword2, keyword3"
-                            name="imageKeywords"
+                            class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                     </div>
                 </div>
-            </div>
-            <div class="flex justify-end gap-3 mt-8">
-                <flux:button
-                    type="button"
-                    variant="outline"
-                    @click="resetAll(); closeModal()"
-                >
-                    Cancel
-                </flux:button>
 
-                <flux:button
-                    type="button"
-                    variant="primary"
-                    @click="saveImage()"
-                    x-show="selectedFile"
-                >
-                    <flux:icon name="check" class="w-4 h-4 mr-2" />
-                    Save Image
-                </flux:button>
+                <div class="flex justify-end gap-3 mt-8">
+                    <button
+                        type="button"
+                        onclick="window.imageUploader_{{ $componentId }}.closeModal()"
+                        class="px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="window.imageUploader_{{ $componentId }}.saveMetadata()"
+                        class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center gap-2"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Save Metadata
+                    </button>
+                </div>
             </div>
         </div>
-    </flux:modal>
+    </div>
 </div>

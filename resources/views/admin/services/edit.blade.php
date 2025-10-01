@@ -134,29 +134,20 @@
                         <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Images</h4>
                     </div>
 
-                    <!-- Current Image Display -->
-                    @if($service->images->count() > 0)
-                        <div class="space-y-4">
-                            <div class="text-sm text-zinc-600 dark:text-zinc-400">Current Image:</div>
-                            @foreach($service->images as $image)
-                                <div class="flex items-center gap-4 p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600">
-                                    <img src="{{ Storage::url($image->image) }}" alt="{{ $image->alt }}" class="w-20 h-20 object-cover rounded-lg">
-                                    <div class="flex-1">
-                                        <div class="font-medium text-zinc-900 dark:text-white">{{ $image->name }}</div>
-                                        <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ $image->title }}</div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    <!-- Image Uploader -->
-                    <div class="bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600 p-6">
-                        <div class="text-sm text-zinc-600 dark:text-zinc-400 mb-4">
-                            {{ $service->images->count() > 0 ? 'Upload a new image to replace the current one:' : 'Upload an image for this service:' }}
-                        </div>
-                        <x-admin.image-uploader />
-                    </div>
+                    <x-image-uploader
+                        name="images"
+                        label="Upload Images"
+                        description="Click to select and upload multiple images for the service"
+                        :existingImages="$service->images->map(fn($img) => [
+                            'id' => $img->id,
+                            'url' => \Storage::url($img->image),
+                            'name' => $img->name,
+                            'alt' => $img->alt,
+                            'title' => $img->title,
+                            'caption' => $img->caption,
+                            'keywords' => $img->keywords
+                        ])->toArray()"
+                    />
                 </div>
 
                 <!-- Action Buttons -->

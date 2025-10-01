@@ -79,7 +79,21 @@
                         @enderror
                     </div>
                 </div>
-                <x-image-uploader name="image" label="Upload Image" description="Upload an image for the service" />
+
+                <!-- Images Section -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <flux:icon name="photo" class="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                        <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Images</h4>
+                    </div>
+
+                    <x-image-uploader
+                        name="images"
+                        label="Upload Images"
+                        description="Click to select and upload multiple images for the service"
+                        :existingImages="[]"
+                    />
+                </div>
 
                 <!-- Configuration Section -->
                 <div class="space-y-6">

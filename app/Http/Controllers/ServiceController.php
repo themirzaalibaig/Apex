@@ -38,7 +38,9 @@ class ServiceController extends Controller
             'description' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'tags' => 'required|string|max:255',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
         $service = Service::create([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -46,20 +48,30 @@ class ServiceController extends Controller
             'status' => $request->status,
             'tags' => $request->tags,
         ]);
-        if ($request->hasFile('image')) {
-            $path = 'services';
-            $disk = 'public';
-            $filename = $request->imageName ? $request->imageName : $request->name;
-            $image = $request->file('image')->storeAs($path, $filename . '.' . $request->image->getClientOriginalExtension(),$disk);
-            $service->images()->create([
-                'image' => $image,
-                'name' => $request->imageName,
-                'alt' => $request->imageAlt,
-                'title' => $request->imageTitle,
-                'caption' => $request->imageCaption,
-                'keywords' => $request->imageKeywords,
-            ]);
+
+        // Handle multiple image uploads
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            $imagesMetadata = $request->input('imagesMetadata', []);
+
+            foreach ($images as $index => $image) {
+                $metadata = $imagesMetadata[$index] ?? [];
+                $path = 'services';
+                $disk = 'public';
+                $filename = $metadata['name'] ?? $request->name . '_' . ($index + 1);
+                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
+
+                $service->images()->create([
+                    'image' => $storedImage,
+                    'name' => $metadata['name'] ?? $filename,
+                    'alt' => $metadata['alt'] ?? '',
+                    'title' => $metadata['title'] ?? '',
+                    'caption' => $metadata['caption'] ?? '',
+                    'keywords' => $metadata['keywords'] ?? '',
+                ]);
+            }
         }
+
         return redirect()->route('services.index')->with('success', 'Service created successfully');
     }
 
@@ -96,6 +108,7 @@ class ServiceController extends Controller
             'description' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'tags' => 'required|string|max:255',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $service = Service::findOrFail($id);
@@ -108,31 +121,43 @@ class ServiceController extends Controller
             'tags' => $request->tags,
         ]);
 
-        // Handle image update if new image is uploaded
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($service->images()->exists()) {
-                $oldImage = $service->images()->first();
-                if ($oldImage && Storage::disk('public')->exists($oldImage->image)) {
-                    Storage::disk('public')->delete($oldImage->image);
+        // Handle image deletions
+        if ($request->has('imagesToDelete')) {
+            $imagesToDelete = json_decode($request->input('imagesToDelete'), true);
+            if (is_array($imagesToDelete) && !empty($imagesToDelete)) {
+                foreach ($imagesToDelete as $imageId) {
+                    $image = $service->images()->find($imageId);
+                    if ($image) {
+                        if (Storage::disk('public')->exists($image->image)) {
+                            Storage::disk('public')->delete($image->image);
+                        }
+                        $image->delete();
+                    }
                 }
-                $oldImage->delete();
             }
+        }
 
-            // Store new image
-            $path = 'services';
-            $disk = 'public';
-            $filename = $request->imageName ? $request->imageName : $request->name;
-            $image = $request->file('image')->storeAs($path, $filename . '.' . $request->image->getClientOriginalExtension(), $disk);
+        // Handle new image uploads
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            $imagesMetadata = $request->input('imagesMetadata', []);
 
-            $service->images()->create([
-                'image' => $image,
-                'name' => $request->imageName,
-                'alt' => $request->imageAlt,
-                'title' => $request->imageTitle,
-                'caption' => $request->imageCaption,
-                'keywords' => $request->imageKeywords,
-            ]);
+            foreach ($images as $index => $image) {
+                $metadata = $imagesMetadata[$index] ?? [];
+                $path = 'services';
+                $disk = 'public';
+                $filename = $metadata['name'] ?? $request->name . '_' . ($index + 1);
+                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
+
+                $service->images()->create([
+                    'image' => $storedImage,
+                    'name' => $metadata['name'] ?? $filename,
+                    'alt' => $metadata['alt'] ?? '',
+                    'title' => $metadata['title'] ?? '',
+                    'caption' => $metadata['caption'] ?? '',
+                    'keywords' => $metadata['keywords'] ?? '',
+                ]);
+            }
         }
 
         return redirect()->route('services.index')->with('success', 'Service updated successfully');
