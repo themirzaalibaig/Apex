@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TeamController;
 use App\Livewire\About;
@@ -38,6 +39,7 @@ Route::middleware(["auth"])->prefix('admin')->group(function () {
     Route::resource('projects', ProjectController::class);
     Route::resource('teams', TeamController::class);
     Route::resource('faqs', FaqController::class);
+    Route::resource('reviews', ReviewController::class);
     // Route::prefix('services')->group(function () {
     //     Route::get('/', Index::class)->name('admin.services');
     //     Route::get('/create', Create::class)->name('admin.services.create');
