@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Team;
 use App\Models\Service;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
             'service' => Service::class,
             'project' => Project::class,
+            'team' => Team::class,
         ]);
     }
 }

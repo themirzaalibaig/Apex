@@ -10,6 +10,7 @@
 
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     @vite('resources/css/app.css')
     @fluxAppearance
     <link rel="preconnect" href="https://fonts.bunny.net">

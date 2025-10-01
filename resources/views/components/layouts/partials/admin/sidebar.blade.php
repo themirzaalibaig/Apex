@@ -9,11 +9,14 @@
         <flux:sidebar.item icon="home" href="{{ route('dashboard') }}" wire:navigate wire:current.exact="active">
             Home
         </flux:sidebar.item>
-        <flux:sidebar.item icon="document-text" href="{{ route('services.index') }}" wire:navigate wire:current.exact="active">
+        <flux:sidebar.item icon="cog" href="{{ route('services.index') }}" wire:navigate wire:current.exact="active">
             Services
         </flux:sidebar.item>
-        <flux:sidebar.item icon="document-text" href="{{ route('projects.index') }}" wire:navigate wire:current.exact="active">
+        <flux:sidebar.item icon="briefcase" href="{{ route('projects.index') }}" wire:navigate wire:current.exact="active">
             Projects
+        </flux:sidebar.item>
+        <flux:sidebar.item icon="user-group" href="{{ route('teams.index') }}" wire:navigate wire:current.exact="active">
+            Team
         </flux:sidebar.item>
         <flux:sidebar.item icon="inbox" badge="12" href="#">Inbox</flux:sidebar.item>
         <flux:sidebar.group expandable icon="star" heading="Favorites" class="grid">
