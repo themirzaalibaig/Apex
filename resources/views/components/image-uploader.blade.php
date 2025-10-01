@@ -199,11 +199,18 @@
     }
 
     function saveMetadata() {
-        state.imageName = container.querySelector('#modal-imageName').value;
-        state.imageAlt = container.querySelector('#modal-imageAlt').value;
-        state.imageTitle = container.querySelector('#modal-imageTitle').value;
-        state.imageCaption = container.querySelector('#modal-imageCaption').value;
-        state.imageKeywords = container.querySelector('#modal-imageKeywords').value;
+        state.imageName = container.querySelector('#modal-imageName').value.trim();
+        state.imageAlt = container.querySelector('#modal-imageAlt').value.trim();
+        state.imageTitle = container.querySelector('#modal-imageTitle').value.trim();
+        state.imageCaption = container.querySelector('#modal-imageCaption').value.trim();
+        state.imageKeywords = container.querySelector('#modal-imageKeywords').value.trim();
+
+        // Validate required field
+        if (!state.imageName) {
+            alert('Please enter an image name');
+            container.querySelector('#modal-imageName').focus();
+            return;
+        }
 
         if (state.currentEditIndex !== null && state.currentEditIndex < state.selectedFiles.length) {
             state.selectedFiles[state.currentEditIndex].name = state.imageName;
@@ -340,7 +347,6 @@
                                 type="text"
                                 id="modal-imageName"
                                 placeholder="Enter image name"
-                                required
                                 class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
