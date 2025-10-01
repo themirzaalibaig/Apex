@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ServiceController;
 use App\Livewire\About;
 use App\Livewire\Admin\Dashboard;
@@ -32,6 +33,7 @@ Route::middleware('guest')->get('/login', Login::class)->name('login');
 Route::middleware(["auth"])->prefix('admin')->group(function () {
     Route::view('/', "admin.dashboard")->name('dashboard');
     Route::resource('services', ServiceController::class);
+    Route::resource('projects', ProjectController::class);
     // Route::prefix('services')->group(function () {
     //     Route::get('/', Index::class)->name('admin.services');
     //     Route::get('/create', Create::class)->name('admin.services.create');

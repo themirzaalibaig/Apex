@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Service;
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Relation::enforceMorphMap([
             'service' => Service::class,
+            'project' => Project::class,
         ]);
     }
 }

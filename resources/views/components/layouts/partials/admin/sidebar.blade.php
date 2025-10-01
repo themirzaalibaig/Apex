@@ -12,6 +12,9 @@
         <flux:sidebar.item icon="document-text" href="{{ route('services.index') }}" wire:navigate wire:current.exact="active">
             Services
         </flux:sidebar.item>
+        <flux:sidebar.item icon="document-text" href="{{ route('projects.index') }}" wire:navigate wire:current.exact="active">
+            Projects
+        </flux:sidebar.item>
         <flux:sidebar.item icon="inbox" badge="12" href="#">Inbox</flux:sidebar.item>
         <flux:sidebar.group expandable icon="star" heading="Favorites" class="grid">
             <flux:sidebar.item href="#" wire:navigate wire:current="active">Marketing site</flux:sidebar.item>
