@@ -1,3 +1,6 @@
+@php
+    $menus = \App\Models\Menu::with('subMenus.images')->where('status', 'active')->get();
+@endphp
 <!-- ===== SIDEBAR STARTS======= -->
 <div class="header-search-form-wrapper">
     <div class="tx-search-close tx-close">
@@ -20,19 +23,18 @@
                     <a><i class="fa-solid fa-xmark"></i></a>
                 </div>
             </div>
-            <div class="sidebar-content">
+            <div class="sidebar-content ">
                 <ul>
-                    <li><a href="">Home</a></li>
-                    <li><a href="">About</a></li>
-                    <li><a href="">Services</a></li>
-                    <li><a href="">Projects</a></li>
-                    <li><a href="">Our Team</a></li>
-                    <li><a href="">Blogs</a></li>
+                    @foreach ($menus as $menu)
+                        <li>
+                            <a href="{{ route($menu->link) }}" wire:navigate>{{ $menu->name }}</a>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
             <div class="space32"></div>
             <div class="btn-area">
-                <a href="" class="vl-btn1" style="overflow: hidden;">Get in
+                <a href="{{ route('contact') }}" class="vl-btn1" style="overflow: hidden;" wire:navigate>Get in
                     touch now</a>
             </div>
             <div class="space40"></div>
