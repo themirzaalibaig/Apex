@@ -1,4 +1,7 @@
 <!-- =====HEADER START======= -->
+@php
+    $menus = \App\Models\Menu::with('subMenus.images')->where('status', 'active')->get();
+@endphp
 <header class="homepage1-menu">
     <div id="vl-header-sticky" class="vl-header-area vl-transparent-header">
         <div class="container headerfix">
@@ -12,8 +15,49 @@
                     <div class="vl-main-menu text-center">
                         <nav class="vl-mobile-menu-active">
                             <ul>
-                                <li>
-                                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}" wire:navigate>Home</a>
+                                @foreach ($menus as $menu)
+                                    <li>
+                                        <a class="nav-link {{ request()->routeIs($menu->link) ? 'active' : '' }} {{ $menu->subMenus->count() > 0 ? 'has-dropdown' : '' }}" href="{{ route($menu->link) }}" wire:navigate>{{ $menu->name }} @if ($menu->subMenus->count() > 0) <span><i class="fa-solid fa-angle-down d-lg-inline d-none"></i></span> @endif</a>
+                                        @if ($menu->subMenus->count() > 0)
+                                            @php
+                                                $allHaveImages = $menu->subMenus->count() > 0 && $menu->subMenus->every(function($submenu) {
+                                                    return $submenu->images;
+                                                });
+                                            @endphp
+
+                                            @if ($allHaveImages)
+                                                <div class="vl-mega-menu">
+                                                    <div class="vl-home-menu">
+                                                        <div class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-{{ $menu->subMenus->count() }}">
+                                                            @foreach ($menu->subMenus as $submenu)
+                                                                <div class="col">
+                                                                    <div class="vl-home-thumb">
+                                                                        <div class="img1">
+                                                                            <img src="{{ asset('storage/' . $submenu->images->image) }}" alt="{{ $submenu->images->first()->alt ?? $submenu->name }}" />
+                                                                        </div>
+                                                                        <a href="{{ $submenu->link }}" wire:navigate>{{ $submenu->name }}</a>
+                                                                        <div class="btn-area1">
+                                                                            <a href="{{ $submenu->link }}" class="vl-btn1" wire:navigate>View</a>
+                                                                        </div>
+                                                                        <div class="space20 d-lg-none d-block"></div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <ul class="sub-menu">
+                                                    @foreach ($menu->subMenus as $submenu)
+                                                        <li><a href="{{ $submenu->link }}" wire:navigate>{{ $submenu->name }}</a></li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                        @endif
+                                    </li>
+                                @endforeach
+                                {{-- <li> --}}
+                                    {{-- <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}" wire:navigate>Home</a> --}}
                                     {{-- <div class="vl-mega-menu">
                                         <div class="vl-home-menu">
                                             <div class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-4">
@@ -76,12 +120,12 @@
                                             </div>
                                         </div>
                                     </div> --}}
-                                </li>
-                                <li><a class="nav-link" href="{{ route('about') }}" wire:navigate wire:current="active">About</a></li>
+                                {{-- </li> --}}
+                                {{-- <li><a class="nav-link" href="{{ route('about') }}" wire:navigate wire:current="active">About</a></li>
                                 <li><a class="nav-link" href="{{ route('services') }}" wire:navigate wire:current="active">Services</a></li>
                                 <li><a class="nav-link" href="{{ route('portfolio') }}" wire:navigate wire:current="active">Projects</a></li>
                                 <li><a class="nav-link" href="{{ route('testimonials') }}" wire:navigate wire:current="active">Client Say's</a></li>
-                                <li><a class="nav-link" href="{{ route('blog') }}" wire:navigate wire:current="active">Blogs</a></li>
+                                <li><a class="nav-link" href="{{ route('blog') }}" wire:navigate wire:current="active">Blogs</a></li> --}}
 
                                 {{-- <li class="has-dropdown">
                                     <a href="#">Pages <span><i

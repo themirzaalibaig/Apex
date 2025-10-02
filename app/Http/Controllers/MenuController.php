@@ -15,6 +15,7 @@ class MenuController extends Controller
     public function index()
     {
         $menus = Menu::with('subMenus')->orderBy('created_at', 'desc')->get();
+        // return $menus;
         return view('admin.menus.index', compact('menus'));
     }
 
