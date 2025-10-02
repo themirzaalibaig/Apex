@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Faq;
 use App\Models\Team;
 use App\Models\Service;
 use App\Models\Project;
@@ -33,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
             'review' => Review::class,
             'menu' => Menu::class,
             'sub_menu' => SubMenu::class,
+            'faq'=>Faq::class,
         ]);
     }
 }

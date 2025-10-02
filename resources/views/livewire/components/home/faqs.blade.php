@@ -11,7 +11,7 @@
          <div class="row">
              <div class="col-lg-10 m-auto">
                  <div class="faq-widget-area text-center">
-                     <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                     {{-- <ul class="nav nav-pills" id="pills-tab" role="tablist">
                          <li class="nav-item" role="presentation">
                              <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
                                  data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
@@ -39,7 +39,7 @@
                                  data-bs-target="#pills-contact2" type="button" role="tab"
                                  aria-controls="pills-contact2" aria-selected="false">5. SEO and Performance</button>
                          </li>
-                     </ul>
+                     </ul> --}}
                      <div class="space48"></div>
                      <div class="tab-content" id="pills-tabContent">
                          <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
@@ -49,97 +49,31 @@
                                      <div class="col-lg-12">
                                          <div class="accordian-area">
                                              <div class="accordion" id="accordionExample">
+                                                @foreach($faqs as $faq)
                                                  <div class="accordion-item">
                                                      <h2 class="accordion-header"><button class="accordion-button"
                                                              type="button" data-bs-toggle="collapse"
                                                              data-bs-target="#collapseOne" aria-expanded="true"
-                                                             aria-controls="collapseOne">What services does Renev
-                                                             offer?</button></h2>
+                                                             aria-controls="collapseOne">{{ $faq->question }}
+                                                             </button></h2>
                                                      <div id="collapseOne" class="accordion-collapse collapse show"
                                                          data-bs-parent="#accordionExample">
                                                          <div class="accordion-body">
-                                                             <p>We’ve worked with clients across various industries,
-                                                                 including retail, healthcare, technology, to education,
-                                                                 hospitality, more. Our team every design to meet the
-                                                                 unique needs your business.</p>
+                                                             <p>{{ $faq->answer }}</p>
                                                          </div>
                                                      </div>
                                                  </div>
                                                  <div class="space20"></div>
-                                                 <div class="accordion-item">
-                                                     <h2 class="accordion-header"><button
-                                                             class="accordion-button collapsed" type="button"
-                                                             data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                             aria-expanded="false" aria-controls="collapseTwo">Can you
-                                                             update my existing website?</button></h2>
-                                                     <div id="collapseTwo" class="accordion-collapse collapse"
-                                                         data-bs-parent="#accordionExample">
-                                                         <div class="accordion-body">
-                                                             <p>We’ve worked with clients across various industries,
-                                                                 including retail, healthcare, technology, to education,
-                                                                 hospitality, more. Our team every design to meet the
-                                                                 unique needs your business.</p>
-                                                         </div>
-                                                     </div>
-                                                 </div>
-                                                 <div class="space20"></div>
-                                                 <div class="accordion-item">
-                                                     <h2 class="accordion-header"><button
-                                                             class="accordion-button collapsed" type="button"
-                                                             data-bs-toggle="collapse" data-bs-target="#collapseThree"
-                                                             aria-expanded="false" aria-controls="collapseThree">Will
-                                                             I have input in the design process?</button></h2>
-                                                     <div id="collapseThree" class="accordion-collapse collapse"
-                                                         data-bs-parent="#accordionExample">
-                                                         <div class="accordion-body">
-                                                             <p>We’ve worked with clients across various industries,
-                                                                 including retail, healthcare, technology, to education,
-                                                                 hospitality, more. Our team every design to meet the
-                                                                 unique needs your business.</p>
-                                                         </div>
-                                                     </div>
-                                                 </div>
-                                                 <div class="space20"></div>
-                                                 <div class="accordion-item">
-                                                     <h2 class="accordion-header"><button
-                                                             class="accordion-button collapsed" type="button"
-                                                             data-bs-toggle="collapse" data-bs-target="#collapseFour"
-                                                             aria-expanded="false" aria-controls="collapseFour">How
-                                                             much does a new website cost?</button></h2>
-                                                     <div id="collapseFour" class="accordion-collapse collapse"
-                                                         data-bs-parent="#accordionExample">
-                                                         <div class="accordion-body">
-                                                             <p>We’ve worked with clients across various industries,
-                                                                 including retail, healthcare, technology, to education,
-                                                                 hospitality, more. Our team every design to meet the
-                                                                 unique needs your business.</p>
-                                                         </div>
-                                                     </div>
-                                                 </div>
-                                                 <div class="space20"></div>
-                                                 <div class="accordion-item">
-                                                     <h2 class="accordion-header"><button
-                                                             class="accordion-button collapsed" type="button"
-                                                             data-bs-toggle="collapse" data-bs-target="#collapseFive"
-                                                             aria-expanded="false" aria-controls="collapseFive">Will
-                                                             my website be mobile-friendly?</button></h2>
-                                                     <div id="collapseFive" class="accordion-collapse collapse"
-                                                         data-bs-parent="#accordionExample">
-                                                         <div class="accordion-body">
-                                                             <p>We’ve worked with clients across various industries,
-                                                                 including retail, healthcare, technology, to education,
-                                                                 hospitality, more. Our team every design to meet the
-                                                                 unique needs your business.</p>
-                                                         </div>
-                                                     </div>
-                                                 </div>
+                                                @endforeach
                                              </div>
                                          </div>
                                      </div>
                                  </div>
                              </div>
                          </div>
-                         <div class="tab-pane fade" id="pills-profile" role="tabpanel"
+
+
+                         {{-- <div class="tab-pane fade" id="pills-profile" role="tabpanel"
                              aria-labelledby="pills-profile-tab" tabindex="0">
                              <div class="faq-section-area">
                                  <div class="row">
@@ -551,7 +485,7 @@
                                      </div>
                                  </div>
                              </div>
-                         </div>
+                         </div> --}}
                      </div>
                  </div>
              </div>
