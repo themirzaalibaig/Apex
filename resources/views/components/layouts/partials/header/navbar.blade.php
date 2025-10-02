@@ -16,28 +16,38 @@
                         <nav class="vl-mobile-menu-active">
                             <ul>
                                 @foreach ($menus as $menu)
-                                    <li>
-                                        <a class="nav-link {{ request()->routeIs($menu->link) ? 'active' : '' }} {{ $menu->subMenus->count() > 0 ? 'has-dropdown' : '' }}" href="{{ route($menu->link) }}" wire:navigate>{{ $menu->name }} @if ($menu->subMenus->count() > 0) <span><i class="fa-solid fa-angle-down d-lg-inline d-none"></i></span> @endif</a>
+                                    @php
+                                        $allHaveImages =
+                                            $menu->subMenus->count() > 0 &&
+                                            $menu->subMenus->every(function ($submenu) {
+                                                return $submenu->images;
+                                            });
+                                    @endphp
+                                    <li class="{{ $allHaveImages ? 'mega-menu-li' : '' }}">
+                                        <a class="nav-link {{ request()->routeIs($menu->link) ? 'active' : '' }} {{ $menu->subMenus->count() > 0 ? 'has-dropdown' : '' }}"
+                                            href="{{ route($menu->link) }}" wire:navigate>{{ $menu->name }}
+                                            @if ($menu->subMenus->count() > 0)
+                                                <span><i class="fa-solid fa-angle-down d-lg-inline d-none"></i></span>
+                                            @endif
+                                        </a>
                                         @if ($menu->subMenus->count() > 0)
-                                            @php
-                                                $allHaveImages = $menu->subMenus->count() > 0 && $menu->subMenus->every(function($submenu) {
-                                                    return $submenu->images;
-                                                });
-                                            @endphp
-
                                             @if ($allHaveImages)
                                                 <div class="vl-mega-menu">
                                                     <div class="vl-home-menu">
-                                                        <div class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-{{ $menu->subMenus->count() }}">
+                                                        <div
+                                                            class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-{{ $menu->subMenus->count() }}">
                                                             @foreach ($menu->subMenus as $submenu)
                                                                 <div class="col">
                                                                     <div class="vl-home-thumb">
                                                                         <div class="img1">
-                                                                            <img src="{{ asset('storage/' . $submenu->images->image) }}" alt="{{ $submenu->images->first()->alt ?? $submenu->name }}" />
+                                                                            <img src="{{ asset('storage/' . $submenu->images->image) }}"
+                                                                                alt="{{ $submenu->images->first()->alt ?? $submenu->name }}" />
                                                                         </div>
-                                                                        <a href="{{ $submenu->link }}" wire:navigate>{{ $submenu->name }}</a>
+                                                                        <a href="{{ $submenu->link }}"
+                                                                            wire:navigate>{{ $submenu->name }}</a>
                                                                         <div class="btn-area1">
-                                                                            <a href="{{ $submenu->link }}" class="vl-btn1" wire:navigate>View</a>
+                                                                            <a href="{{ $submenu->link }}"
+                                                                                class="vl-btn1" wire:navigate>View</a>
                                                                         </div>
                                                                         <div class="space20 d-lg-none d-block"></div>
                                                                     </div>
@@ -49,7 +59,8 @@
                                             @else
                                                 <ul class="sub-menu">
                                                     @foreach ($menu->subMenus as $submenu)
-                                                        <li><a href="{{ $submenu->link }}" wire:navigate>{{ $submenu->name }}</a></li>
+                                                        <li><a href="{{ $submenu->link }}"
+                                                                wire:navigate>{{ $submenu->name }}</a></li>
                                                     @endforeach
                                                 </ul>
                                             @endif
@@ -57,8 +68,8 @@
                                     </li>
                                 @endforeach
                                 {{-- <li> --}}
-                                    {{-- <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}" wire:navigate>Home</a> --}}
-                                    {{-- <div class="vl-mega-menu">
+                                {{-- <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}" wire:navigate>Home</a> --}}
+                                {{-- <div class="vl-mega-menu">
                                         <div class="vl-home-menu">
                                             <div class="row gx-4 row-cols-1 row-cols-md-1 row-cols-lg-4">
                                                 <div class="col">
@@ -196,8 +207,8 @@
                 </div>
                 <div class="col-lg-4 col-md-6 col-6">
                     <div class="vl-hero-btn d-none d-lg-block text-end">
-                        <span class="vl-btn-wrap text-end"><a href="{{ route('contact') }}" wire:navigate class="vl-btn1"
-                                style="overflow: hidden;">Let’s Build Together</a></span>
+                        <span class="vl-btn-wrap text-end"><a href="{{ route('contact') }}" wire:navigate
+                                class="vl-btn1" style="overflow: hidden;">Let’s Build Together</a></span>
                         <button class="hamburger_menu"><img src="/img/icons/bars-icons1.svg" alt="" /></button>
                     </div>
                     <div class="vl-header-action-item d-block d-lg-none">

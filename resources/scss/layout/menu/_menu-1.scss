@@ -52,8 +52,9 @@
           text-align: center;
           & > li{
               display: inline-block;
-            //   position: relative;
-              .span-arrow {
+              position: relative;
+
+            .span-arrow {
                 display: flex !important;
                 align-items: center;
                 justify-content: space-between;
@@ -63,10 +64,14 @@
                 color: var(--ztc-text-text-8);
                 background: none;
             }
-              & > a{
-                  color: var(--ztc-text-text-1);
-                  font-family: var(--ztc-family-font1);
-                  font-size: var(--ztc-font-size-font-s18);
+            &.mega-menu-li{
+                position: static;
+            }
+            & > a{
+                color: var(--ztc-text-text-1);
+                font-family: var(--ztc-family-font1);
+                font-size: var(--ztc-font-size-font-s18);
+                  position: relative;
                   display: inline-block;
                   position: relative;
                   transition: .4s;
