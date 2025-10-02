@@ -11,101 +11,60 @@
         </div>
 
         <div class="row">
+            @foreach($teams as $team)
+            @php
+                $bgImage = $team->images->firstWhere('alt', 'background');
+            @endphp
+
             <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration="900">
                 <div class="team-author-boxarea">
-                    <img src="/img/elements/elements7.png" alt="" class="elements7 keyframe5" />
+                    <img src="{{ $bgImage ? asset('storage/' . $bgImage->image) : asset('img/elements/elements7.png') }}" alt="" class="elements7 keyframe5" />
                     <div class="img1">
-                        <img src="/img/all-images/team/team-img1.png" alt="" />
+                        <img src="{{ $team->images->first()->image ? asset('storage/' . $team->images->first()->image) : asset('img/all-images/team/team-img1.png') }}" alt="" />
                     </div>
                     <div class="content-area">
                         <div class="content">
-                            <a href="">Alex Robertson</a>
+                            <a href="">{{ $team->name }}</a>
                             <div class="space14"></div>
-                            <p>Finance Consultant</p>
+                            <p>{{ $team->designation }}</p>
                         </div>
                         <div class="share">
-                            <a href="#"><img src="/img/icons/share1.svg" alt="" /></a>
+                            <a href="{{ $team->slug }}"><i class="fa-solid fa-share-nodes text-white"></i></a>
                         </div>
                     </div>
                     <div class="list">
                         <ul>
+                            @if($team->facebook)
                             <li>
-                                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="{{ $team->facebook }}" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
                             </li>
+                            @endif
+                            @if($team->twitter)
                             <li>
-                                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="{{ $team->twitter }}" target="_blank"><i class="fa-brands fa-twitter"></i></a>
                             </li>
+                            @endif
+                            @if($team->instagram)
                             <li>
-                                <a href="#" class="m-0"><i class="fa-brands fa-linkedin-in"></i></a>
+                                <a href="{{ $team->instagram }}" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                             </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+                            @endif
+                            @if($team->linkedin)
+                            <li>
+                                <a href="{{ $team->linkedin }}" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                            </li>
+                            @endif
+                            @if($team->github)
+                            <li>
+                                <a href="{{ $team->github }}" target="_blank"><i class="fa-brands fa-github"></i></a>
+                            </li>
+                            @endif
 
-            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration="1000">
-                <div class="team-author-boxarea">
-                    <img src="/img/elements/elements7.png" alt="" class="elements7 keyframe5" />
-                    <div class="img1">
-                        <img src="/img/all-images/team/team-img2.png" alt="" />
-                    </div>
-                    <div class="content-area">
-                        <div class="content">
-                            <a href="">Dean Henderson</a>
-                            <div class="space14"></div>
-                            <p>Finance Consultant</p>
-                        </div>
-                        <div class="share">
-                            <a href="#"><img src="/img/icons/share1.svg" alt="" /></a>
-                        </div>
-                    </div>
-                    <div class="list">
-                        <ul>
-                            <li>
-                                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                            </li>
-                            <li>
-                                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="m-0"><i class="fa-brands fa-linkedin-in"></i></a>
-                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
-
-            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration="1100">
-                <div class="team-author-boxarea">
-                    <img src="/img/elements/elements7.png" alt="" class="elements7 keyframe5" />
-                    <div class="img1">
-                        <img src="/img/all-images/team/team-img3.png" alt="" />
-                    </div>
-                    <div class="content-area">
-                        <div class="content">
-                            <a href="">Rioc Lewis</a>
-                            <div class="space14"></div>
-                            <p>Finance Consultant</p>
-                        </div>
-                        <div class="share">
-                            <a href="#"><img src="/img/icons/share1.svg" alt="" /></a>
-                        </div>
-                    </div>
-                    <div class="list">
-                        <ul>
-                            <li>
-                                <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                            </li>
-                            <li>
-                                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                            </li>
-                            <li>
-                                <a href="#" class="m-0"><i class="fa-brands fa-linkedin-in"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>
