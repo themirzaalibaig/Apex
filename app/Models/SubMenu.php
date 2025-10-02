@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class SubMenu extends Model
 {
@@ -18,8 +18,8 @@ class SubMenu extends Model
     {
         return $this->belongsTo(Menu::class, 'menu_id');
     }
-    public function images(): MorphMany
+    public function images(): MorphOne
     {
-        return $this->morphMany(Image::class, 'imageable');
+        return $this->morphOne(Image::class, 'imageable');
     }
 }
