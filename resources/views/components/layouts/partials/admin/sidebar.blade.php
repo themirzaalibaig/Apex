@@ -12,6 +12,9 @@
         <flux:sidebar.item icon="sparkles" href="{{ route('hero-sections.index') }}" wire:navigate wire:current.exact="active">
             Hero Sections
         </flux:sidebar.item>
+        <flux:sidebar.item icon="information-circle" href="{{ route('abouts.index') }}" wire:navigate wire:current.exact="active">
+            About Sections
+        </flux:sidebar.item>
         <flux:sidebar.item icon="cog" href="{{ route('services.index') }}" wire:navigate wire:current.exact="active">
             Services
         </flux:sidebar.item>
