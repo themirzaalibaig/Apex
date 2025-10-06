@@ -9,6 +9,7 @@ use App\Models\Project;
 use App\Models\Review;
 use App\Models\Menu;
 use App\Models\SubMenu;
+use App\Models\HeroSection;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
             'menu' => Menu::class,
             'sub_menu' => SubMenu::class,
             'faq'=>Faq::class,
+            'hero_section' => HeroSection::class,
         ]);
     }
 }

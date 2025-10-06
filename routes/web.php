@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\HeroScetionController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReviewController;
@@ -36,6 +37,7 @@ Route::middleware('guest')->get('/login', Login::class)->name('login');
 
 Route::middleware(["auth"])->prefix('admin')->group(function () {
     Route::view('/', "admin.dashboard")->name('dashboard');
+    Route::resource('hero-sections', HeroScetionController::class);
     Route::resource('services', ServiceController::class);
     Route::resource('projects', ProjectController::class);
     Route::resource('teams', TeamController::class);

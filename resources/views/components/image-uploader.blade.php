@@ -19,6 +19,7 @@
         showModal: false,
         selectedFiles: [],
         currentEditIndex: null,
+        currentEditType: null, // 'new' or 'existing'
         imageName: '',
         imageAlt: '',
         imageTitle: '',
@@ -26,7 +27,8 @@
         imageKeywords: '',
         dragging: false,
         existingImages: {!! json_encode($existingImages) !!},
-        imagesToDelete: []
+        imagesToDelete: [],
+        existingImagesMetadata: {} // Track metadata changes for existing images
     };
 
     function getAllImages() {
@@ -68,6 +70,12 @@
             div.innerHTML = `
                 <img src="${img.url}" alt="${img.alt || ''}" class="w-full h-32 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700">
                 <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                    <button type="button" onclick="window.imageUploader_${componentId}.editExistingImage(${index})"
+                        class="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors" title="Edit metadata">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                    </button>
                     <button type="button" onclick="window.imageUploader_${componentId}.removeExistingImage(${index})"
                         class="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors" title="Remove image">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +122,7 @@
     function handleFileSelect(event) {
         const files = Array.from(event.target.files);
         files.forEach(file => {
-            if (file.type.startsWith('image/')) {
+                if (file.type.startsWith('image/')) {
                 addFile(file);
             }
         });
@@ -122,8 +130,8 @@
     }
 
     function addFile(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
             state.selectedFiles.push({
                 file: file,
                 preview: e.target.result,
@@ -134,8 +142,8 @@
                 keywords: ''
             });
             render();
-        };
-        reader.readAsDataURL(file);
+            };
+            reader.readAsDataURL(file);
     }
 
     function removeNewImage(index) {
@@ -158,6 +166,22 @@
         state.imageCaption = img.caption;
         state.imageKeywords = img.keywords;
         state.currentEditIndex = index;
+        state.currentEditType = 'new';
+        openModal();
+    }
+
+    function editExistingImage(index) {
+        const img = state.existingImages[index];
+        // Check if there are metadata updates for this image
+        const metadata = state.existingImagesMetadata[img.id] || img;
+
+        state.imageName = metadata.name || '';
+        state.imageAlt = metadata.alt || '';
+        state.imageTitle = metadata.title || '';
+        state.imageCaption = metadata.caption || '';
+        state.imageKeywords = metadata.keywords || '';
+        state.currentEditIndex = index;
+        state.currentEditType = 'existing';
         openModal();
     }
 
@@ -165,9 +189,16 @@
         const modal = container.querySelector('.metadata-modal');
         const preview = container.querySelector('.modal-preview');
 
-        if (state.currentEditIndex !== null && state.selectedFiles[state.currentEditIndex]) {
-            preview.src = state.selectedFiles[state.currentEditIndex].preview;
-            preview.style.display = 'block';
+        if (state.currentEditIndex !== null) {
+            if (state.currentEditType === 'new' && state.selectedFiles[state.currentEditIndex]) {
+                preview.src = state.selectedFiles[state.currentEditIndex].preview;
+                preview.style.display = 'block';
+            } else if (state.currentEditType === 'existing' && state.existingImages[state.currentEditIndex]) {
+                preview.src = state.existingImages[state.currentEditIndex].url;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
         } else {
             preview.style.display = 'none';
         }
@@ -187,6 +218,7 @@
         modal.style.display = 'none';
         state.showModal = false;
         state.currentEditIndex = null;
+        state.currentEditType = null;
         resetForm();
     }
 
@@ -212,12 +244,25 @@
             return;
         }
 
-        if (state.currentEditIndex !== null && state.currentEditIndex < state.selectedFiles.length) {
-            state.selectedFiles[state.currentEditIndex].name = state.imageName;
-            state.selectedFiles[state.currentEditIndex].alt = state.imageAlt;
-            state.selectedFiles[state.currentEditIndex].title = state.imageTitle;
-            state.selectedFiles[state.currentEditIndex].caption = state.imageCaption;
-            state.selectedFiles[state.currentEditIndex].keywords = state.imageKeywords;
+        if (state.currentEditIndex !== null) {
+            if (state.currentEditType === 'new' && state.currentEditIndex < state.selectedFiles.length) {
+                // Update new image metadata
+                state.selectedFiles[state.currentEditIndex].name = state.imageName;
+                state.selectedFiles[state.currentEditIndex].alt = state.imageAlt;
+                state.selectedFiles[state.currentEditIndex].title = state.imageTitle;
+                state.selectedFiles[state.currentEditIndex].caption = state.imageCaption;
+                state.selectedFiles[state.currentEditIndex].keywords = state.imageKeywords;
+            } else if (state.currentEditType === 'existing' && state.currentEditIndex < state.existingImages.length) {
+                // Update existing image metadata
+                const img = state.existingImages[state.currentEditIndex];
+                state.existingImagesMetadata[img.id] = {
+                    name: state.imageName,
+                    alt: state.imageAlt,
+                    title: state.imageTitle,
+                    caption: state.imageCaption,
+                    keywords: state.imageKeywords
+                };
+            }
         }
         closeModal();
         render();
@@ -253,6 +298,23 @@
         if (deleteInput) {
             deleteInput.value = JSON.stringify(state.imagesToDelete);
         }
+
+        // Update existing images metadata
+        const metadataContainer = container.querySelector('.existing-metadata-inputs');
+        if (metadataContainer) {
+            metadataContainer.innerHTML = '';
+
+            Object.keys(state.existingImagesMetadata).forEach(imageId => {
+                const metadata = state.existingImagesMetadata[imageId];
+                metadataContainer.innerHTML += `
+                    <input type="hidden" name="existingImagesMetadata[${imageId}][name]" value="${metadata.name}">
+                    <input type="hidden" name="existingImagesMetadata[${imageId}][alt]" value="${metadata.alt}">
+                    <input type="hidden" name="existingImagesMetadata[${imageId}][title]" value="${metadata.title}">
+                    <textarea name="existingImagesMetadata[${imageId}][caption]" class="hidden">${metadata.caption}</textarea>
+                    <input type="hidden" name="existingImagesMetadata[${imageId}][keywords]" value="${metadata.keywords}">
+                `;
+            });
+        }
     }
 
     // Expose functions globally for this component
@@ -261,6 +323,7 @@
         removeNewImage,
         removeExistingImage,
         editImage,
+        editExistingImage,
         saveMetadata,
         closeModal
     };
@@ -277,6 +340,7 @@
     <input type="file" name="{{ $name }}[]" multiple accept="image/*" class="hidden file-input-main">
     <input type="hidden" name="imagesToDelete" value="">
     <div class="metadata-inputs"></div>
+    <div class="existing-metadata-inputs"></div>
 
     <!-- Upload Button (shown when no images) -->
     <div class="upload-button-wrapper text-center">
@@ -303,20 +367,20 @@
 
             <!-- New Selected Images Container -->
             <div class="new-images-grid contents"></div>
-        </div>
+            </div>
 
         <!-- Add More Images Button -->
         <div class="flex justify-center">
             <button
-                type="button"
+                                type="button"
                 onclick="this.parentElement.parentElement.parentElement.querySelector('.file-input-main').click()"
                 class="px-6 py-3 bg-white dark:bg-zinc-700 border-2 border-dashed border-zinc-300 dark:border-zinc-600 rounded-lg hover:border-zinc-400 dark:hover:border-zinc-500 transition-colors flex items-center gap-2"
             >
                 <flux:icon name="plus" class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
                 <span class="text-sm font-medium text-zinc-900 dark:text-white">Add More Images</span>
             </button>
-        </div>
-    </div>
+                        </div>
+                    </div>
 
     <!-- Modal for Editing Image Metadata -->
     <div class="metadata-modal fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" style="display: none;">
@@ -328,9 +392,9 @@
 
                 <!-- Image Preview in Modal -->
                 <div class="mb-6 text-center">
-                    <img
+                        <img
                         src=""
-                        alt="Preview"
+                            alt="Preview"
                         class="modal-preview max-w-full max-h-48 mx-auto rounded-lg shadow-md"
                         style="display: none;"
                     >
@@ -401,17 +465,17 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end gap-3 mt-8">
+            <div class="flex justify-end gap-3 mt-8">
                     <button
-                        type="button"
+                    type="button"
                         onclick="window.imageUploader_{{ $componentId }}.closeModal()"
                         class="px-4 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
-                    >
-                        Cancel
+                >
+                    Cancel
                     </button>
 
                     <button
-                        type="button"
+                    type="button"
                         onclick="window.imageUploader_{{ $componentId }}.saveMetadata()"
                         class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors flex items-center gap-2"
                     >

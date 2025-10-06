@@ -140,6 +140,23 @@ class ProjectController extends Controller
             }
         }
 
+        // Handle existing images metadata updates
+        if ($request->has('existingImagesMetadata')) {
+            $existingImagesMetadata = $request->input('existingImagesMetadata', []);
+            foreach ($existingImagesMetadata as $imageId => $metadata) {
+                $image = $project->images()->find($imageId);
+                if ($image) {
+                    $image->update([
+                        'name' => $metadata['name'] ?? $image->name,
+                        'alt' => $metadata['alt'] ?? $image->alt,
+                        'title' => $metadata['title'] ?? $image->title,
+                        'caption' => $metadata['caption'] ?? $image->caption,
+                        'keywords' => $metadata['keywords'] ?? $image->keywords,
+                    ]);
+                }
+            }
+        }
+
         // Handle new image uploads
         if ($request->hasFile('images')) {
             $images = $request->file('images');

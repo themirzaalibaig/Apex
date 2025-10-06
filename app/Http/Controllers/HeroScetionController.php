@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Service;
+use App\Models\HeroSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class ServiceController extends Controller
+class HeroScetionController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $services = Service::with('images')->get();
-        return view('admin.services.index', compact('services'));
+        $heroSections = HeroSection::with('images')->orderBy('created_at', 'desc')->get();
+        return view('admin.hero-sections.index', compact('heroSections'));
     }
 
     /**
@@ -22,8 +22,8 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        $status = 'active'; // Default status for new services
-        return view('admin.services.create', compact('status'));
+        $status = 'active';
+        return view('admin.hero-sections.create', compact('status'));
     }
 
     /**
@@ -31,22 +31,23 @@ class ServiceController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'subtitle' => 'required|string|max:255',
+            'title1' => 'required|string|max:255',
+            'title2' => 'required|string|max:255',
+            'cta' => 'required|string|max:255',
+            'cta_url' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
-            'tags' => 'required|string|max:255',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $service = Service::create([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'description' => $request->description,
+        $heroSection = HeroSection::create([
+            'subtitle' => $request->subtitle,
+            'title1' => $request->title1,
+            'title2' => $request->title2,
+            'cta' => $request->cta,
+            'cta_url' => $request->cta_url,
             'status' => $request->status,
-            'tags' => $request->tags,
         ]);
 
         // Handle multiple image uploads
@@ -56,12 +57,12 @@ class ServiceController extends Controller
 
             foreach ($images as $index => $image) {
                 $metadata = $imagesMetadata[$index] ?? [];
-                $path = 'services';
+                $path = 'hero_sections';
                 $disk = 'public';
-                $filename = $metadata['name'] ?? $request->name . '_' . ($index + 1);
+                $filename = $metadata['name'] ?? 'hero_' . ($index + 1);
                 $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
 
-                $service->images()->create([
+                $heroSection->images()->create([
                     'image' => $storedImage,
                     'name' => $metadata['name'] ?? $filename,
                     'alt' => $metadata['alt'] ?? '',
@@ -72,7 +73,7 @@ class ServiceController extends Controller
             }
         }
 
-        return redirect()->route('services.index')->with('success', 'Service created successfully');
+        return redirect()->route('hero-sections.index')->with('success', 'Hero Section created successfully');
     }
 
     /**
@@ -80,8 +81,8 @@ class ServiceController extends Controller
      */
     public function show(string $id)
     {
-        $service = Service::with('images')->find($id);
-        return view('admin.services.view', compact('service'));
+        $heroSection = HeroSection::with('images')->findOrFail($id);
+        return view('admin.hero-sections.view', compact('heroSection'));
     }
 
     /**
@@ -89,12 +90,8 @@ class ServiceController extends Controller
      */
     public function edit(string $id)
     {
-        $service = Service::with('images')->findOrFail($id);
-
-        // Parse tags from comma-separated string to array
-        $tags = $service->tags ? explode(',', $service->tags) : [];
-
-        return view('admin.services.edit', compact('service', 'tags'));
+        $heroSection = HeroSection::with('images')->findOrFail($id);
+        return view('admin.hero-sections.edit', compact('heroSection'));
     }
 
     /**
@@ -103,22 +100,24 @@ class ServiceController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'subtitle' => 'required|string|max:255',
+            'title1' => 'required|string|max:255',
+            'title2' => 'required|string|max:255',
+            'cta' => 'required|string|max:255',
+            'cta_url' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
-            'tags' => 'required|string|max:255',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $service = Service::findOrFail($id);
+        $heroSection = HeroSection::findOrFail($id);
 
-        $service->update([
-            'name' => $request->name,
-            'slug' => $request->slug,
-            'description' => $request->description,
+        $heroSection->update([
+            'subtitle' => $request->subtitle,
+            'title1' => $request->title1,
+            'title2' => $request->title2,
+            'cta' => $request->cta,
+            'cta_url' => $request->cta_url,
             'status' => $request->status,
-            'tags' => $request->tags,
         ]);
 
         // Handle image deletions
@@ -126,7 +125,7 @@ class ServiceController extends Controller
             $imagesToDelete = json_decode($request->input('imagesToDelete'), true);
             if (is_array($imagesToDelete) && !empty($imagesToDelete)) {
                 foreach ($imagesToDelete as $imageId) {
-                    $image = $service->images()->find($imageId);
+                    $image = $heroSection->images()->find($imageId);
                     if ($image) {
                         if (Storage::disk('public')->exists($image->image)) {
                             Storage::disk('public')->delete($image->image);
@@ -141,7 +140,7 @@ class ServiceController extends Controller
         if ($request->has('existingImagesMetadata')) {
             $existingImagesMetadata = $request->input('existingImagesMetadata', []);
             foreach ($existingImagesMetadata as $imageId => $metadata) {
-                $image = $service->images()->find($imageId);
+                $image = $heroSection->images()->find($imageId);
                 if ($image) {
                     $image->update([
                         'name' => $metadata['name'] ?? $image->name,
@@ -161,12 +160,12 @@ class ServiceController extends Controller
 
             foreach ($images as $index => $image) {
                 $metadata = $imagesMetadata[$index] ?? [];
-                $path = 'services';
+                $path = 'hero_sections';
                 $disk = 'public';
-                $filename = $metadata['name'] ?? $request->name . '_' . ($index + 1);
+                $filename = $metadata['name'] ?? 'hero_' . ($index + 1);
                 $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
 
-                $service->images()->create([
+                $heroSection->images()->create([
                     'image' => $storedImage,
                     'name' => $metadata['name'] ?? $filename,
                     'alt' => $metadata['alt'] ?? '',
@@ -177,7 +176,7 @@ class ServiceController extends Controller
             }
         }
 
-        return redirect()->route('services.index')->with('success', 'Service updated successfully');
+        return redirect()->route('hero-sections.index')->with('success', 'Hero Section updated successfully');
     }
 
     /**
@@ -185,16 +184,16 @@ class ServiceController extends Controller
      */
     public function destroy(string $id)
     {
-        $service = Service::with('images')->findOrFail($id);
+        $heroSection = HeroSection::with('images')->findOrFail($id);
 
         // Delete associated images and files
-        foreach ($service->images as $image) {
+        foreach ($heroSection->images as $image) {
             if (Storage::disk('public')->exists($image->image)) {
                 Storage::disk('public')->delete($image->image);
             }
         }
 
-        $service->delete();
-        return redirect()->route('services.index')->with('success', 'Service deleted successfully');
+        $heroSection->delete();
+        return redirect()->route('hero-sections.index')->with('success', 'Hero Section deleted successfully');
     }
 }
