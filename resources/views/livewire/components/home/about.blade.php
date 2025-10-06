@@ -5,7 +5,7 @@
               <div class="col-lg-6">
                   <div class="images">
                       <div class="img1 reveal">
-                          <img src="/img/all-images/about/about-img1.png" alt="" />
+                          <img src="{{ $about->images->first()->image ? asset('storage/' . $about->images->first()->image) : asset('img/all-images/about/about-img1.png') }}" alt="" />
                       </div>
                       <img src="/img/elements/elements8.png" alt="" class="elements8" />
                   </div>
@@ -14,31 +14,25 @@
               <div class="col-lg-6">
                   <div class="about-header heading1">
                       <h5 data-aos="fade-left" data-aos-duration="800"><img src="/img/icons/sub-logo2.svg"
-                              alt="" />Driven to the Creativity</h5>
+                              alt="" />{{ $about->subtitle }}</h5>
                       <div class="space20"></div>
-                      <h2 class="text-anime-style-3">Crafting Website with Purpose and Passions</h2>
+                      <h2 class="text-anime-style-3">{{ $about->title }}</h2>
                       <div class="space16"></div>
-                      <p data-aos="fade-left" data-aos-duration="900">Our team of designers, developers, and strategists
-                          are passionate about bringing your brand’s vision to life through innovative user.</p>
+                      <p data-aos="fade-left" data-aos-duration="900">{{ $about->description }}</p>
                       <div class="space32"></div>
                       <div class="bg-progress" data-aos="fade-left" data-aos-duration="1000">
+                        @foreach($about->skills as $skill)
                           <div class="progress-bar">
-                              <label>User Interface Designer <span>98%</span></label>
+                              <label>{{ $skill['name'] }} <span>{{ $skill['percentage'] }}%</span></label>
                               <div class="progress">
-                                  <div class="progress-inner" style="width: 98%;"></div>
+                                  <div class="progress-inner" style="width: {{ $skill['percentage'] }}%;"></div>
                               </div>
                           </div>
-
-                          <div class="progress-bar m-0">
-                              <label>WordPress Developer <span>99%</span></label>
-                              <div class="progress">
-                                  <div class="progress-inner" style="width: 99%;"></div>
-                              </div>
-                          </div>
+                          @endforeach
                       </div>
                       <div class="space32"></div>
                       <div class="btn-area1" data-aos="fade-left" data-aos-duration="1100">
-                          <a href="" class="vl-btn1" style="overflow: hidden;">Schedule a Consultation</a>
+                          <a href="{{ $about->cta_url }}" class="vl-btn1" style="overflow: hidden;">{{ $about->cta }}</a>
                       </div>
                   </div>
               </div>

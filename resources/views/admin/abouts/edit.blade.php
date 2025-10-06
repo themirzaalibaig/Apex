@@ -133,17 +133,17 @@
                             @foreach($skills as $index => $skill)
                                 <div class="skill-item flex items-center space-x-3 p-3 border border-zinc-200 dark:border-zinc-700 rounded-lg">
                                     <div class="flex-1">
-                                        <flux:input
+                                        <input
                                             type="text"
                                             name="skills[{{ $index }}][name]"
                                             placeholder="Skill name"
                                             value="{{ old("skills.{$index}.name", $skill['name'] ?? '') }}"
                                             required
-                                            class="w-full"
+                                            class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                         />
                                     </div>
                                     <div class="w-24">
-                                        <flux:input
+                                        <input
                                             type="number"
                                             name="skills[{{ $index }}][percentage]"
                                             placeholder="%"
@@ -151,7 +151,7 @@
                                             max="100"
                                             value="{{ old("skills.{$index}.percentage", $skill['percentage'] ?? '') }}"
                                             required
-                                            class="w-full"
+                                            class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                         />
                                     </div>
                                     <flux:button type="button" variant="ghost" size="sm" onclick="removeSkill(this)">
@@ -162,17 +162,17 @@
                         @else
                             <div class="skill-item flex items-center space-x-3 p-3 border border-zinc-200 dark:border-zinc-700 rounded-lg">
                                 <div class="flex-1">
-                                    <flux:input
+                                    <input
                                         type="text"
                                         name="skills[0][name]"
                                         placeholder="Skill name"
                                         value="{{ old('skills.0.name') }}"
                                         required
-                                        class="w-full"
+                                        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                     />
                                 </div>
                                 <div class="w-24">
-                                    <flux:input
+                                    <input
                                         type="number"
                                         name="skills[0][percentage]"
                                         placeholder="%"
@@ -180,7 +180,7 @@
                                         max="100"
                                         value="{{ old('skills.0.percentage') }}"
                                         required
-                                        class="w-full"
+                                        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                     />
                                 </div>
                                 <flux:button type="button" variant="ghost" size="sm" onclick="removeSkill(this)">
@@ -254,23 +254,23 @@
                             @foreach($statistics as $index => $statistic)
                                 <div class="statistic-item flex items-center space-x-3 p-3 border border-zinc-200 dark:border-zinc-700 rounded-lg">
                                     <div class="flex-1">
-                                        <flux:input
+                                        <input
                                             type="text"
                                             name="statistics[{{ $index }}][number]"
                                             placeholder="Number/Value"
                                             value="{{ old("statistics.{$index}.number", $statistic['number'] ?? '') }}"
                                             required
-                                            class="w-full"
+                                            class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                         />
                                     </div>
                                     <div class="flex-1">
-                                        <flux:input
+                                        <input
                                             type="text"
                                             name="statistics[{{ $index }}][label]"
                                             placeholder="Label"
                                             value="{{ old("statistics.{$index}.label", $statistic['label'] ?? '') }}"
                                             required
-                                            class="w-full"
+                                            class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                         />
                                     </div>
                                     <flux:button type="button" variant="ghost" size="sm" onclick="removeStatistic(this)">
@@ -281,23 +281,23 @@
                         @else
                             <div class="statistic-item flex items-center space-x-3 p-3 border border-zinc-200 dark:border-zinc-700 rounded-lg">
                                 <div class="flex-1">
-                                    <flux:input
+                                    <input
                                         type="text"
                                         name="statistics[0][number]"
                                         placeholder="Number/Value"
                                         value="{{ old('statistics.0.number') }}"
                                         required
-                                        class="w-full"
+                                        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                     />
                                 </div>
                                 <div class="flex-1">
-                                    <flux:input
+                                    <input
                                         type="text"
                                         name="statistics[0][label]"
                                         placeholder="Label"
                                         value="{{ old('statistics.0.label') }}"
                                         required
-                                        class="w-full"
+                                        class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
                                     />
                                 </div>
                                 <flux:button type="button" variant="ghost" size="sm" onclick="removeStatistic(this)">

@@ -67,16 +67,21 @@ class AboutController extends Controller
             'statistics' => $request->statistics,
         ]);
 
-        // Handle image uploads
+        // Handle multiple image uploads
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('abouts', 'public');
+            $images = $request->file('images');
+            $imagesMetadata = $request->input('imagesMetadata', []);
 
-                $metadata = $request->input("imagesMetadata.{$index}", []);
+            foreach ($images as $index => $image) {
+                $metadata = $imagesMetadata[$index] ?? [];
+                $path = 'abouts';
+                $disk = 'public';
+                $filename = $metadata['name'] ?? 'about_' . ($index + 1);
+                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
 
                 $about->images()->create([
-                    'image' => $path,
-                    'name' => $metadata['name'] ?? $image->getClientOriginalName(),
+                    'image' => $storedImage,
+                    'name' => $metadata['name'] ?? $filename,
                     'alt' => $metadata['alt'] ?? '',
                     'title' => $metadata['title'] ?? '',
                     'caption' => $metadata['caption'] ?? '',
@@ -94,6 +99,8 @@ class AboutController extends Controller
     public function show(About $about)
     {
         $about->load('images');
+        // return $about;
+
         return view('admin.abouts.view', compact('about'));
     }
 
@@ -191,14 +198,19 @@ class AboutController extends Controller
 
         // Handle new image uploads
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $path = $image->store('abouts', 'public');
+            $images = $request->file('images');
+            $imagesMetadata = $request->input('imagesMetadata', []);
 
-                $metadata = $request->input("imagesMetadata.{$index}", []);
+            foreach ($images as $index => $image) {
+                $metadata = $imagesMetadata[$index] ?? [];
+                $path = 'abouts';
+                $disk = 'public';
+                $filename = $metadata['name'] ?? 'about_' . ($index + 1);
+                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
 
                 $about->images()->create([
-                    'image' => $path,
-                    'name' => $metadata['name'] ?? $image->getClientOriginalName(),
+                    'image' => $storedImage,
+                    'name' => $metadata['name'] ?? $filename,
                     'alt' => $metadata['alt'] ?? '',
                     'title' => $metadata['title'] ?? '',
                     'caption' => $metadata['caption'] ?? '',
