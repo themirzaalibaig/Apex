@@ -6,7 +6,7 @@
         <!-- Main Card -->
         <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
             <!-- Card Header -->
-            <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50">
+            <div class="m-6 px-6 py-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-zinc-100 dark:bg-zinc-900/30 rounded-lg flex items-center justify-center">
                         <flux:icon name="pencil" class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
@@ -17,6 +17,19 @@
                     </div>
                 </div>
             </div>
+            @if ($errors->any())
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6">
+                    <div class="flex items-center gap-2 mb-2">
+                        <flux:icon name="exclamation-triangle" class="w-5 h-5 text-red-600 dark:text-red-400" />
+                        <span class="text-red-800 dark:text-red-200 font-medium">Please fix the following errors:</span>
+                    </div>
+                    <ul class="list-disc list-inside text-red-700 dark:text-red-300 text-sm pl-2">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
             <!-- Card Body -->
             <form action="{{ route('hero-sections.update', $heroSection->id) }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-8">
