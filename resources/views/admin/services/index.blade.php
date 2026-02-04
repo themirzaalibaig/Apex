@@ -48,7 +48,7 @@
                             Status
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
-                            Images
+                            Media
                         </th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
                             Actions
@@ -116,24 +116,24 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($service->images->count() > 0)
+                                @if($service->mediaUsages->count() > 0)
                                     <div class="flex items-center gap-1">
-                                        @foreach($service->images->take(3) as $image)
+                                        @foreach($service->mediaUsages->take(3) as $usage)
                                             <img
-                                                src="{{ Storage::url($image->image) }}"
-                                                alt="{{ $image->alt }}"
+                                                src="{{ $usage->upload?->url }}"
+                                                alt="{{ $usage->upload?->seo_alt_text }}"
                                                 class="w-[30px] h-[30px] object-cover rounded border border-zinc-200 dark:border-zinc-600"
-                                                title="{{ $image->name }}"
+                                                title="{{ $usage->upload?->file_name }}"
                                             >
                                         @endforeach
-                                        @if($service->images->count() > 3)
+                                        @if($service->mediaUsages->count() > 3)
                                             <span class="text-xs text-zinc-500 dark:text-zinc-400 ml-1">
-                                                +{{ $service->images->count() - 3 }}
+                                                +{{ $service->mediaUsages->count() - 3 }}
                                             </span>
                                         @endif
                                     </div>
                                 @else
-                                    <span class="text-sm text-zinc-400 dark:text-zinc-500">No images</span>
+                                    <span class="text-sm text-zinc-400 dark:text-zinc-500">No media</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

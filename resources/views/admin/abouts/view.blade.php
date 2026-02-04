@@ -149,19 +149,19 @@
                 </div>
 
                 <!-- Images -->
-                @if($about->images->count() > 0)
+                @if($about->mediaUsages->count() > 0)
                     <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
                         <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50">
                             <div class="flex items-center gap-2">
                                 <flux:icon name="photo" class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
-                                <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Images ({{ $about->images->count() }})</h3>
+                                <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Images ({{ $about->mediaUsages->count() }})</h3>
                             </div>
                         </div>
                         <div class="p-6">
                             <div class="grid grid-cols-2 gap-3">
-                                @foreach($about->images as $image)
+                                @foreach($about->mediaUsages as $usage)
                                     <div class="relative group">
-                                        <img src="{{ Storage::url($image->image) }}" alt="{{ $image->alt }}" class="w-full h-24 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700">
+                                        <img src="{{ $usage->upload?->url }}" alt="{{ $usage->upload?->seo_alt_text }}" class="w-full h-24 object-cover rounded-lg border border-zinc-200 dark:border-zinc-700">
                                         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
                                             <flux:button size="sm" variant="ghost" class="text-white hover:text-white">
                                                 <flux:icon name="eye" class="w-4 h-4" />

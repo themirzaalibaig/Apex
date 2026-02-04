@@ -10,7 +10,7 @@ class Service extends Component
     public $services;
     public function mount()
     {
-        $this->services = ModelsService::with('images')->get();
+        $this->services = ModelsService::with('mediaUsages.upload')->get();
     }
     public function render()
     {

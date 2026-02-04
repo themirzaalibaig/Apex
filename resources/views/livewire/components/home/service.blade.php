@@ -31,8 +31,8 @@
                     </div>
                     <div class="hidden-img">
                         @php
-                            $image = $service->images->first();
-                            $imagePath = $image && $image->image ? '/storage/' . $image->image : '/img/all-images/service/service-img1.png';
+                            $image = $service->mediaByType('thumbnail') ?? $service->mediaFirst();
+                            $imagePath = $image?->url ?? '/img/all-images/service/service-img1.png';
                         @endphp
                         <img src="{{ $imagePath }}" alt="{{ $service->name ?? 'Service Image' }}" />
                     </div>

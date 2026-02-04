@@ -115,29 +115,33 @@
                     </div>
                 </div>
 
-                <!-- Images Section -->
+                <!-- Media Section -->
                 <div class="space-y-6">
                     <div class="flex items-center gap-2 mb-4">
                         <flux:icon name="photo" class="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                        <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Images</h4>
+                        <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Media</h4>
                     </div>
 
-                    @if($service->images->count() > 0)
+                    @if($service->mediaUsages->count() > 0)
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            @foreach($service->images as $image)
+                            @foreach($service->mediaUsages as $usage)
+                                @php
+                                    $upload = $usage->upload;
+                                @endphp
+                                @if($upload)
                                 <div class="bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600 overflow-hidden">
-                                    <img src="{{ Storage::url($image->image) }}" alt="{{ $image->alt }}" class="w-full h-48 object-cover">
+                                    <img src="{{ $upload->url }}" alt="{{ $upload->seo_alt_text }}" class="w-full h-48 object-cover">
                                     <div class="p-4">
-                                        <h5 class="font-medium text-zinc-900 dark:text-white mb-2">{{ $image->name }}</h5>
-                                        @if($image->title)
-                                            <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-2">{{ $image->title }}</p>
+                                        <h5 class="font-medium text-zinc-900 dark:text-white mb-2">{{ $upload->file_name }}</h5>
+                                        @if($upload->seo_meta_title)
+                                            <p class="text-sm text-zinc-600 dark:text-zinc-400 mb-2">{{ $upload->seo_meta_title }}</p>
                                         @endif
-                                        @if($image->caption)
-                                            <p class="text-sm text-zinc-500 dark:text-zinc-500 mb-2">{{ $image->caption }}</p>
+                                        @if($upload->seo_meta_description)
+                                            <p class="text-sm text-zinc-500 dark:text-zinc-500 mb-2">{{ $upload->seo_meta_description }}</p>
                                         @endif
-                                        @if($image->keywords)
+                                        @if($upload->seo_meta_keywords)
                                             <div class="flex flex-wrap gap-1">
-                                                @foreach(explode(',', $image->keywords) as $keyword)
+                                                @foreach($upload->seo_meta_keywords as $keyword)
                                                     <span class="px-2 py-1 bg-zinc-200 dark:bg-zinc-600 text-zinc-600 dark:text-zinc-400 text-xs rounded">
                                                         {{ trim($keyword) }}
                                                     </span>
@@ -146,20 +150,21 @@
                                         @endif
                                     </div>
                                 </div>
+                                @endif
                             @endforeach
                         </div>
                     @else
                         <div class="text-center py-12 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600">
                             <flux:icon name="photo" class="w-12 h-12 text-zinc-300 dark:text-zinc-600 mx-auto mb-4" />
-                            <h3 class="text-lg font-medium text-zinc-900 dark:text-white mb-2">No Images</h3>
-                            <p class="text-zinc-500 dark:text-zinc-400 mb-4">This service doesn't have any images yet</p>
+                            <h3 class="text-lg font-medium text-zinc-900 dark:text-white mb-2">No Media</h3>
+                            <p class="text-zinc-500 dark:text-zinc-400 mb-4">This service doesn't have any media yet</p>
                             <flux:button
                                 variant="outline"
                                 href="{{ route('services.edit', $service->id) }}"
                                 class="px-4"
                             >
                                 <flux:icon name="plus" class="w-4 h-4 mr-2" />
-                                Add Images
+                                Add Media
                             </flux:button>
                         </div>
                     @endif

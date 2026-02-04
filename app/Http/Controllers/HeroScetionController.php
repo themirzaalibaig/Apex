@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\HandlesMediaUsages;
 use App\Models\HeroSection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class HeroScetionController extends Controller
 {
+    use HandlesMediaUsages;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $heroSections = HeroSection::with('images')->orderBy('created_at', 'desc')->get();
+        $heroSections = HeroSection::with('mediaUsages.upload')->orderBy('created_at', 'desc')->get();
         return view('admin.hero-sections.index', compact('heroSections'));
     }
 
@@ -23,7 +24,8 @@ class HeroScetionController extends Controller
     public function create()
     {
         $status = 'active';
-        return view('admin.hero-sections.create', compact('status'));
+        $selectedMedia = [];
+        return view('admin.hero-sections.create', compact('status', 'selectedMedia'));
     }
 
     /**
@@ -38,7 +40,9 @@ class HeroScetionController extends Controller
             'cta' => 'required|string|max:255',
             'cta_url' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'media_usages' => 'nullable|array',
+            'media_usages.*.upload_id' => 'nullable|integer|exists:uploads,id',
+            'media_usages.*.type' => 'nullable|string|max:255',
         ]);
 
         $heroSection = HeroSection::create([
@@ -50,28 +54,7 @@ class HeroScetionController extends Controller
             'status' => $request->status,
         ]);
 
-        // Handle multiple image uploads
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-            $imagesMetadata = $request->input('imagesMetadata', []);
-
-            foreach ($images as $index => $image) {
-                $metadata = $imagesMetadata[$index] ?? [];
-                $path = 'hero_sections';
-                $disk = 'public';
-                $filename = $metadata['name'] ?? 'hero_' . ($index + 1);
-                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
-
-                $heroSection->images()->create([
-                    'image' => $storedImage,
-                    'name' => $metadata['name'] ?? $filename,
-                    'alt' => $metadata['alt'] ?? '',
-                    'title' => $metadata['title'] ?? '',
-                    'caption' => $metadata['caption'] ?? '',
-                    'keywords' => $metadata['keywords'] ?? '',
-                ]);
-            }
-        }
+        $this->syncMediaUsages($heroSection, $request->input('media_usages', []));
 
         return redirect()->route('hero-sections.index')->with('success', 'Hero Section created successfully');
     }
@@ -81,7 +64,7 @@ class HeroScetionController extends Controller
      */
     public function show(string $id)
     {
-        $heroSection = HeroSection::with('images')->findOrFail($id);
+        $heroSection = HeroSection::with('mediaUsages.upload')->findOrFail($id);
         return view('admin.hero-sections.view', compact('heroSection'));
     }
 
@@ -90,8 +73,17 @@ class HeroScetionController extends Controller
      */
     public function edit(string $id)
     {
-        $heroSection = HeroSection::with('images')->findOrFail($id);
-        return view('admin.hero-sections.edit', compact('heroSection'));
+        $heroSection = HeroSection::with('mediaUsages.upload')->findOrFail($id);
+        $selectedMedia = $heroSection->mediaUsages()->with('upload')->get()->map(function ($usage) {
+            return [
+                'upload_id' => $usage->upload_id,
+                'type' => $usage->type,
+                'url' => $usage->upload?->url,
+                'file_name' => $usage->upload?->file_name,
+                'seo_alt_text' => $usage->upload?->seo_alt_text,
+            ];
+        })->toArray();
+        return view('admin.hero-sections.edit', compact('heroSection', 'selectedMedia'));
     }
 
     /**
@@ -106,7 +98,9 @@ class HeroScetionController extends Controller
             'cta' => 'required|string|max:255',
             'cta_url' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'media_usages' => 'nullable|array',
+            'media_usages.*.upload_id' => 'nullable|integer|exists:uploads,id',
+            'media_usages.*.type' => 'nullable|string|max:255',
         ]);
 
         $heroSection = HeroSection::findOrFail($id);
@@ -120,61 +114,7 @@ class HeroScetionController extends Controller
             'status' => $request->status,
         ]);
 
-        // Handle image deletions
-        if ($request->has('imagesToDelete')) {
-            $imagesToDelete = json_decode($request->input('imagesToDelete'), true);
-            if (is_array($imagesToDelete) && !empty($imagesToDelete)) {
-                foreach ($imagesToDelete as $imageId) {
-                    $image = $heroSection->images()->find($imageId);
-                    if ($image) {
-                        if (Storage::disk('public')->exists($image->image)) {
-                            Storage::disk('public')->delete($image->image);
-                        }
-                        $image->delete();
-                    }
-                }
-            }
-        }
-
-        // Handle existing images metadata updates
-        if ($request->has('existingImagesMetadata')) {
-            $existingImagesMetadata = $request->input('existingImagesMetadata', []);
-            foreach ($existingImagesMetadata as $imageId => $metadata) {
-                $image = $heroSection->images()->find($imageId);
-                if ($image) {
-                    $image->update([
-                        'name' => $metadata['name'] ?? $image->name,
-                        'alt' => $metadata['alt'] ?? $image->alt,
-                        'title' => $metadata['title'] ?? $image->title,
-                        'caption' => $metadata['caption'] ?? $image->caption,
-                        'keywords' => $metadata['keywords'] ?? $image->keywords,
-                    ]);
-                }
-            }
-        }
-
-        // Handle new image uploads
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-            $imagesMetadata = $request->input('imagesMetadata', []);
-
-            foreach ($images as $index => $image) {
-                $metadata = $imagesMetadata[$index] ?? [];
-                $path = 'hero_sections';
-                $disk = 'public';
-                $filename = $metadata['name'] ?? 'hero_' . ($index + 1);
-                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
-
-                $heroSection->images()->create([
-                    'image' => $storedImage,
-                    'name' => $metadata['name'] ?? $filename,
-                    'alt' => $metadata['alt'] ?? '',
-                    'title' => $metadata['title'] ?? '',
-                    'caption' => $metadata['caption'] ?? '',
-                    'keywords' => $metadata['keywords'] ?? '',
-                ]);
-            }
-        }
+        $this->syncMediaUsages($heroSection, $request->input('media_usages', []));
 
         return redirect()->route('hero-sections.index')->with('success', 'Hero Section updated successfully');
     }
@@ -184,14 +124,7 @@ class HeroScetionController extends Controller
      */
     public function destroy(string $id)
     {
-        $heroSection = HeroSection::with('images')->findOrFail($id);
-
-        // Delete associated images and files
-        foreach ($heroSection->images as $image) {
-            if (Storage::disk('public')->exists($image->image)) {
-                Storage::disk('public')->delete($image->image);
-            }
-        }
+        $heroSection = HeroSection::with('mediaUsages.upload')->findOrFail($id);
 
         $heroSection->delete();
         return redirect()->route('hero-sections.index')->with('success', 'Hero Section deleted successfully');

@@ -134,19 +134,11 @@
                         <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Images</h4>
                     </div>
 
-                    <x-image-uploader
-                        name="images"
-                        label="Upload Images"
-                        description="Click to select and upload multiple images for the service"
-                        :existingImages="$service->images->map(fn($img) => [
-                            'id' => $img->id,
-                            'url' => \Storage::url($img->image),
-                            'name' => $img->name,
-                            'alt' => $img->alt,
-                            'title' => $img->title,
-                            'caption' => $img->caption,
-                            'keywords' => $img->keywords
-                        ])->toArray()"
+                    <x-admin.media-selector
+                        name="media_usages"
+                        :selected="$selectedMedia"
+                        label="Select Service Images"
+                        description="Choose existing media or upload new for the service"
                     />
                 </div>
 

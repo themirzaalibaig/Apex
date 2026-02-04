@@ -129,6 +129,10 @@
     </div>
 </div>
 
+<div class="hidden">
+    <x-admin.media-selector name="__media_init" :selected="[]" />
+</div>
+
 <script>
 let submenuIndex = 0;
 
@@ -170,21 +174,21 @@ function addSubmenu() {
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <div class="space-y-2">
-                    <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Image (Optional)</label>
+                    <label class="text-sm font-medium text-zinc-700 dark:text-zinc-300">Media (Optional)</label>
                     <div class="flex items-center gap-3">
-                        <label for="submenu_image_${submenuIndex}" class="cursor-pointer inline-flex items-center px-4 py-2 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-zinc-900 dark:text-white rounded-lg border border-zinc-300 dark:border-zinc-600 text-sm font-medium transition-colors">
+                        <button type="button" onclick="openMenuMediaPicker(${submenuIndex})" class="inline-flex items-center px-4 py-2 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-700 dark:hover:bg-zinc-600 text-zinc-900 dark:text-white rounded-lg border border-zinc-300 dark:border-zinc-600 text-sm font-medium transition-colors">
                             <i class="fas fa-image mr-2"></i>
-                            Choose Image
-                        </label>
-                        <input
-                            type="file"
-                            id="submenu_image_${submenuIndex}"
-                            name="submenus[${submenuIndex}][image]"
-                            accept="image/*"
-                            onchange="previewImage(${submenuIndex}, this)"
-                            class="hidden"
-                        />
+                            Select Media
+                        </button>
+                        <input type="hidden" id="submenu_media_${submenuIndex}" name="submenus[${submenuIndex}][media_usages][0][upload_id]" />
                     </div>
+                    <input
+                        type="text"
+                        id="submenu_media_type_${submenuIndex}"
+                        name="submenus[${submenuIndex}][media_usages][0][type]"
+                        placeholder="type (e.g., thumbnail)"
+                        class="w-full mt-2 px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white"
+                    />
                     <div id="preview_${submenuIndex}" class="hidden mt-2">
                         <img id="preview_img_${submenuIndex}" src="" alt="Preview" class="w-24 h-24 object-cover rounded-lg border border-zinc-300 dark:border-zinc-600">
                     </div>
@@ -215,24 +219,23 @@ function removeSubmenu(index) {
     }
 }
 
-function previewImage(index, input) {
-    const preview = document.getElementById(`preview_${index}`);
-    const previewImg = document.getElementById(`preview_img_${index}`);
-
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            previewImg.src = e.target.result;
+function openMenuMediaPicker(index) {
+    if (!window.mediaLibrary) return;
+    window.mediaLibrary.openPicker({
+        multiple: false,
+        preselected: [],
+        onSelect: (uploads) => {
+            const upload = uploads[0];
+            if (!upload) return;
+            const input = document.getElementById(`submenu_media_${index}`);
+            const preview = document.getElementById(`preview_${index}`);
+            const previewImg = document.getElementById(`preview_img_${index}`);
+            input.value = upload.id;
+            previewImg.src = upload.url;
             preview.classList.remove('hidden');
-        };
-
-        reader.readAsDataURL(input.files[0]);
-    } else {
-        preview.classList.add('hidden');
-    }
+        }
+    });
 }
 </script>
 
 @endsection
-

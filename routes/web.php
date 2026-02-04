@@ -4,6 +4,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\HeroScetionController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ServiceController;
@@ -46,6 +47,7 @@ Route::middleware(["auth"])->prefix('admin')->group(function () {
     Route::resource('faqs', FaqController::class);
     Route::resource('reviews', ReviewController::class);
     Route::resource('menus', MenuController::class);
+    Route::resource('media', MediaController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
     // Route::prefix('services')->group(function () {
     //     Route::get('/', Index::class)->name('admin.services');
     //     Route::get('/create', Create::class)->name('admin.services.create');

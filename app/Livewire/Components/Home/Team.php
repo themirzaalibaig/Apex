@@ -10,7 +10,7 @@ class Team extends Component
     public $teams;
     public function mount()
     {
-        $this->teams = ModelsTeam::With('images')->where('status', 'active')->limit(6)->get();
+        $this->teams = ModelsTeam::with('mediaUsages.upload')->where('status', 'active')->limit(6)->get();
     }
     public function render()
     {

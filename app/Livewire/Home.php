@@ -11,7 +11,7 @@ class Home extends Component
 
     public function mount()
     {
-        $this->services=Service::with("images")->get();
+        $this->services=Service::with('mediaUsages.upload')->get();
     }
     public function render()
     {

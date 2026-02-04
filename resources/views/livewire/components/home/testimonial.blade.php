@@ -17,7 +17,7 @@
                     <div class="swiper-wrapper">
                         @foreach($testimonials as $testimonial)
                         @php
-                            $companyImage=$testimonial->images->firstWhere('alt', 'company-logo');
+                            $companyImage = $testimonial->mediaByType('company-logo');
                         @endphp
                         <div class="swiper-slide">
                             <div class="testimonial-boxarea">
@@ -35,7 +35,7 @@
                                 <div class="names-area">
                                     <div class="man-textarea">
                                         <div class="man">
-                                            <img src="{{ $testimonial->images->first() ? asset('storage/' . $testimonial->images->first()->image) : asset('img/all-images/testimonial/testimonial-img5.png') }}"
+                                            <img src="{{ $testimonial->mediaFirst()?->url ?? asset('img/all-images/testimonial/testimonial-img5.png') }}"
                                                 alt="" />
                                         </div>
                                         <div class="text">
@@ -44,7 +44,7 @@
                                             <p>{{ $testimonial->designation }}</p>
                                         </div>
                                     </div>
-                                    <img src="{{ $companyImage ? asset('storage/' . $companyImage->image) : asset('img/elements/elements20.png') }}" alt="" class="elements20" />
+                                    <img src="{{ $companyImage?->url ?? asset('img/elements/elements20.png') }}" alt="" class="elements20" />
                                 </div>
                             </div>
                         </div>
@@ -65,8 +65,8 @@
                     <div class="swiper-wrapper list-img">
                         @foreach($testimonials as $testimonial)
                         @php
-                            $image=$testimonial->images->first();
-                            $imageUrl=$image ? asset('storage/' . $image->image) : asset('img/all-images/testimonial/testimonial-img5.png');
+                            $image = $testimonial->mediaByType('avatar') ?? $testimonial->mediaFirst();
+                            $imageUrl = $image?->url ?? asset('img/all-images/testimonial/testimonial-img5.png');
                         @endphp
                         <div class="swiper-slide">
                             <div>

@@ -11,7 +11,7 @@ class Hero extends Component
 
     public function mount()
     {
-        $this->heroSection = HeroSection::with('images')->first();
+        $this->heroSection = HeroSection::with('mediaUsages.upload')->first();
     }
 
     public function render()

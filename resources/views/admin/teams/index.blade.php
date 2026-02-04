@@ -62,8 +62,11 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        @if($team->images->first())
-                                            <img src="{{ Storage::url($team->images->first()->image) }}" alt="{{ $team->name }}" class="h-10 w-10 rounded-full object-cover">
+                                        @php
+                                            $teamUpload = $team->mediaByType('profile') ?? $team->mediaFirst();
+                                        @endphp
+                                        @if($teamUpload)
+                                            <img src="{{ $teamUpload->url }}" alt="{{ $team->name }}" class="h-10 w-10 rounded-full object-cover">
                                         @else
                                             <div class="h-10 w-10 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center">
                                                 <i class="fas fa-user text-orange-600 dark:text-orange-400"></i>
@@ -136,19 +139,24 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                @if($team->images->count() > 0)
+                                @if($team->mediaUsages->count() > 0)
                                     <div class="flex items-center gap-1">
-                                        @foreach($team->images->take(3) as $image)
+                                        @foreach($team->mediaUsages->take(3) as $usage)
+                                            @php
+                                                $upload = $usage->upload;
+                                            @endphp
+                                            @if($upload)
                                             <img
-                                                src="{{ Storage::url($image->image) }}"
-                                                alt="{{ $image->alt }}"
+                                                src="{{ $upload->url }}"
+                                                alt="{{ $upload->seo_alt_text }}"
                                                 class="w-[30px] h-[30px] object-cover rounded border border-zinc-200 dark:border-zinc-600"
-                                                title="{{ $image->name }}"
+                                                title="{{ $upload->file_name }}"
                                             >
+                                            @endif
                                         @endforeach
-                                        @if($team->images->count() > 3)
+                                        @if($team->mediaUsages->count() > 3)
                                             <span class="text-xs text-zinc-500 dark:text-zinc-400 ml-1">
-                                                +{{ $team->images->count() - 3 }}
+                                                +{{ $team->mediaUsages->count() - 3 }}
                                             </span>
                                         @endif
                                     </div>
@@ -319,4 +327,3 @@
     </script>
 </div>
 @endsection
-

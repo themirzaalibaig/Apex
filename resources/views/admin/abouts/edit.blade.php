@@ -322,10 +322,11 @@
                         <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Images</h4>
                     </div>
 
-                    <x-image-uploader
-                        name="images"
-                        :existingImages="$about->images->map(function($img) { return ['id' => $img->id, 'url' => Storage::url($img->image), 'alt' => $img->alt, 'name' => $img->name, 'title' => $img->title, 'caption' => $img->caption, 'keywords' => $img->keywords]; })->toArray()"
-                        componentId="about-images-edit"
+                    <x-admin.media-selector
+                        name="media_usages"
+                        :selected="$selectedMedia"
+                        label="Select About Images"
+                        description="Choose existing media or upload new for the about section"
                     />
                 </div>
 

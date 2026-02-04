@@ -13,14 +13,17 @@
         <div class="row">
             @foreach($teams as $team)
             @php
-                $bgImage = $team->images->firstWhere('alt', 'background');
+                $bgImage = $team->mediaByType('background');
             @endphp
 
             <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-duration="900">
                 <div class="team-author-boxarea">
-                    <img src="{{ $bgImage ? asset('storage/' . $bgImage->image) : asset('img/elements/elements7.png') }}" alt="" class="elements7 keyframe5" />
+                    <img src="{{ $bgImage?->url ?? asset('img/elements/elements7.png') }}" alt="" class="elements7 keyframe5" />
                     <div class="img1">
-                        <img src="{{ $team->images->first()->image ? asset('storage/' . $team->images->first()->image) : asset('img/all-images/team/team-img1.png') }}" alt="" />
+                        @php
+                            $profileImage = $team->mediaByType('profile') ?? $team->mediaFirst();
+                        @endphp
+                        <img src="{{ $profileImage?->url ?? asset('img/all-images/team/team-img1.png') }}" alt="" />
                     </div>
                     <div class="content-area">
                         <div class="content">

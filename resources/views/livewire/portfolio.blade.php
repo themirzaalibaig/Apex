@@ -1,7 +1,25 @@
 @section('body-attributes', 'class=body-bg1')
+@php
+  $heroBg = $heroSection?->mediaByType('background');
+  $heroMain = $heroSection?->mediaByType('main');
+  $projectsCollection = $projects ?? collect();
+  $filterByKeywords = function (array $keywords) use ($projectsCollection) {
+    return $projectsCollection->filter(function ($project) use ($keywords) {
+      $tags = $project->tags ? array_filter(array_map('trim', explode(',', $project->tags))) : [];
+      foreach ($tags as $tag) {
+        foreach ($keywords as $keyword) {
+          if ($keyword !== '' && stripos($tag, $keyword) !== false) {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
+  };
+@endphp
 
 <div>
-    <div class="inner-section-area" style="background-image: url(/img/all-images/bg/hero-bg1.png); background-position: center top; background-repeat: no-repeat; background-size: cover;">
+    <div class="inner-section-area" style="background-image: url({{ $heroBg?->url ?? asset('img/all-images/bg/hero-bg1.png') }}); background-position: center top; background-repeat: no-repeat; background-size: cover;">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-lg-5">
@@ -15,7 +33,7 @@
         <div class="col-lg-3">
           <div class="imges-header">
             <div class="img1">
-              <img src="/img/all-images/hero/hero-img1.png" alt="" class="keyframe6" />
+              <img src="{{ $heroMain?->url ?? asset('img/all-images/hero/hero-img1.png') }}" alt="" class="keyframe6" />
             </div>
             <div class="arrow">
               <a href="{{ route('contact') }}">

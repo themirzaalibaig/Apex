@@ -13,6 +13,7 @@ class Image extends Model
         'title',
         'caption',
         'keywords',
+        'type',
         'image',
         'imageable_id',
         'imageable_type',

@@ -110,11 +110,11 @@
                         <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Images</h4>
                     </div>
 
-                    <x-image-uploader
-                        name="images"
-                        label="Upload Images"
-                        description="Click to select and upload multiple images for the project"
-                        :existingImages="[]"
+                    <x-admin.media-selector
+                        name="media_usages"
+                        :selected="$selectedMedia"
+                        label="Select Project Images"
+                        description="Choose existing media or upload new for the project"
                     />
                 </div>
 
@@ -181,4 +181,3 @@
 </div>
 
 @endsection
-

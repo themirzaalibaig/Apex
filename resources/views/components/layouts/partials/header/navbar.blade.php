@@ -1,6 +1,6 @@
 <!-- =====HEADER START======= -->
 @php
-    $menus = \App\Models\Menu::with('subMenus.images')->where('status', 'active')->get();
+    $menus = \App\Models\Menu::with('subMenus.mediaUsages.upload')->where('status', 'active')->get();
 @endphp
 <header class="homepage1-menu">
     <div id="vl-header-sticky" class="vl-header-area vl-transparent-header">
@@ -20,7 +20,7 @@
                                         $allHaveImages =
                                             $menu->subMenus->count() > 0 &&
                                             $menu->subMenus->every(function ($submenu) {
-                                                return $submenu->images;
+                                                return $submenu->mediaUsages && $submenu->mediaUsages->isNotEmpty();
                                             });
                                     @endphp
                                     <li class="{{ $allHaveImages ? 'mega-menu-li' : '' }}">
@@ -40,8 +40,12 @@
                                                                 <div class="col">
                                                                     <div class="vl-home-thumb">
                                                                         <div class="img1">
-                                                                            <img src="{{ asset('storage/' . $submenu->images->image) }}"
-                                                                                alt="{{ $submenu->images->first()->alt ?? $submenu->name }}" />
+                                                                            @php
+                                                                                $submenuUpload = $submenu->mediaByType('thumbnail') ?? $submenu->mediaFirst();
+                                                                                $submenuImagePath = $submenuUpload ? $submenuUpload->url : asset('img/all-images/others/serve-img1.png');
+                                                                            @endphp
+                                                                            <img src="{{ $submenuImagePath }}"
+                                                                                alt="{{ $submenuUpload?->seo_alt_text ?? $submenu->name }}" />
                                                                         </div>
                                                                         <a href="{{ $submenu->link }}"
                                                                             wire:navigate>{{ $submenu->name }}</a>

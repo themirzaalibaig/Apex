@@ -1,7 +1,5 @@
 @php
-    $services = \App\Models\Service::with(['images' => function($query) {
-        $query->where('alt', 'others-area');
-    }])->where('status', 'active')->get();
+    $services = \App\Models\Service::with('mediaUsages.upload')->where('status', 'active')->get();
 @endphp
 <div class="serve-section-area sp10">
     <div class="container">
@@ -23,8 +21,8 @@
                                 <h3>
                                     <a href="{{ $service->slug }}">
                                         @php
-                                            $image = $service->images->first();
-                                            $imagePath = $image && $image->image ? asset('storage/' . ltrim($image->image, '/')) : asset('img/all-images/others/serve-img1.png');
+                                            $image = $service->mediaByType('others-area') ?? $service->mediaFirst();
+                                            $imagePath = $image?->url ?? asset('img/all-images/others/serve-img1.png');
                                         @endphp
                                         <img src="{{ $imagePath }}" alt="" />
                                         <span><i class="fa-solid fa-arrow-right"></i></span> {{ $service->name }}

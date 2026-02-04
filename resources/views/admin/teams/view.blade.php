@@ -133,31 +133,36 @@
                 @endif
 
                 <!-- Photos Gallery Card -->
-                @if($team->images->count() > 0)
+                @if($team->mediaUsages->count() > 0)
                 <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
                     <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50">
                         <div class="flex items-center gap-2">
                             <flux:icon name="photo" class="w-5 h-5 text-purple-600 dark:text-purple-400" />
                             <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Photos</h3>
-                            <span class="ml-auto text-sm text-zinc-500 dark:text-zinc-400">{{ $team->images->count() }} photo(s)</span>
+                            <span class="ml-auto text-sm text-zinc-500 dark:text-zinc-400">{{ $team->mediaUsages->count() }} photo(s)</span>
                         </div>
                     </div>
 
                     <div class="p-6">
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            @foreach($team->images as $image)
+                            @foreach($team->mediaUsages as $usage)
+                                @php
+                                    $upload = $usage->upload;
+                                @endphp
+                                @if($upload)
                                 <div class="group relative aspect-square overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                                     <img
-                                        src="{{ Storage::url($image->image) }}"
-                                        alt="{{ $image->alt }}"
+                                        src="{{ $upload->url }}"
+                                        alt="{{ $upload->seo_alt_text }}"
                                         class="w-full h-full object-cover transition-transform group-hover:scale-110"
                                     >
                                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <div class="text-center text-white p-2">
-                                            <p class="text-sm font-medium">{{ $image->name }}</p>
+                                            <p class="text-sm font-medium">{{ $upload->file_name }}</p>
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>
@@ -218,7 +223,7 @@
                         <div class="pt-4 border-t border-zinc-200 dark:border-zinc-700">
                             <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Total Photos</p>
                             <p class="text-zinc-900 dark:text-white font-medium">
-                                {{ $team->images->count() }} photo(s)
+                                {{ $team->mediaUsages->count() }} photo(s)
                             </p>
                         </div>
                     </div>
@@ -344,4 +349,3 @@
     </script>
 </div>
 @endsection
-

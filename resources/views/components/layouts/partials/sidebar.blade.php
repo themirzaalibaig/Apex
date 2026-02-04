@@ -1,5 +1,5 @@
 @php
-    $menus = \App\Models\Menu::with('subMenus.images')->where('status', 'active')->get();
+    $menus = \App\Models\Menu::with('subMenus.mediaUsages.upload')->where('status', 'active')->get();
 @endphp
 <!-- ===== SIDEBAR STARTS======= -->
 <div class="header-search-form-wrapper">

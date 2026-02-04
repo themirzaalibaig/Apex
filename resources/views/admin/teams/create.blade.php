@@ -179,11 +179,11 @@
                         <h4 class="text-lg font-medium text-zinc-900 dark:text-white">Profile Photo</h4>
                     </div>
 
-                    <x-image-uploader
-                        name="images"
-                        label="Upload Photo"
-                        description="Click to select and upload photos for the team member"
-                        :existingImages="[]"
+                    <x-admin.media-selector
+                        name="media_usages"
+                        :selected="$selectedMedia"
+                        label="Select Profile Photos"
+                        description="Choose existing media or upload new for the team member"
                     />
                 </div>
 
@@ -235,4 +235,3 @@
 </div>
 
 @endsection
-

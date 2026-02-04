@@ -77,31 +77,31 @@
                     </div>
                 </div>
 
-                <!-- Images Gallery Card -->
-                @if($heroSection->images->count() > 0)
+                <!-- Media Gallery Card -->
+                @if($heroSection->mediaUsages->count() > 0)
                 <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden">
                     <div class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-700/50">
                         <div class="flex items-center gap-2">
                             <flux:icon name="photo" class="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                            <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Image Gallery</h3>
-                            <span class="ml-auto text-sm text-zinc-500 dark:text-zinc-400">{{ $heroSection->images->count() }} image(s)</span>
+                            <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Media Gallery</h3>
+                            <span class="ml-auto text-sm text-zinc-500 dark:text-zinc-400">{{ $heroSection->mediaUsages->count() }} item(s)</span>
                         </div>
                     </div>
 
                     <div class="p-6">
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            @foreach($heroSection->images as $image)
+                            @foreach($heroSection->mediaUsages as $usage)
                                 <div class="group relative aspect-square overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700">
                                     <img
-                                        src="{{ Storage::url($image->image) }}"
-                                        alt="{{ $image->alt }}"
+                                        src="{{ $usage->upload?->url }}"
+                                        alt="{{ $usage->upload?->seo_alt_text }}"
                                         class="w-full h-full object-cover transition-transform group-hover:scale-110"
                                     >
                                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <div class="text-center text-white p-2">
-                                            <p class="text-sm font-medium">{{ $image->name }}</p>
-                                            @if($image->caption)
-                                                <p class="text-xs mt-1 opacity-90">{{ Str::limit($image->caption, 50) }}</p>
+                                            <p class="text-sm font-medium">{{ $usage->upload?->file_name }}</p>
+                                            @if($usage->upload?->seo_meta_description)
+                                                <p class="text-xs mt-1 opacity-90">{{ Str::limit($usage->upload?->seo_meta_description, 50) }}</p>
                                             @endif
                                         </div>
                                     </div>
@@ -164,9 +164,9 @@
                         </div>
 
                         <div class="pt-4 border-t border-zinc-200 dark:border-zinc-700">
-                            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Total Images</p>
+                            <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-1">Total Media</p>
                             <p class="text-zinc-900 dark:text-white font-medium">
-                                {{ $heroSection->images->count() }} image(s)
+                                {{ $heroSection->mediaUsages->count() }} item(s)
                             </p>
                         </div>
                     </div>

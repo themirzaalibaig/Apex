@@ -12,53 +12,45 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="portfolio-slider-area owl-carousel">
-                    <div class="portfolio-boxarea">
-                        <div class="img1">
-                            <img src="/img/all-images/portfolio/portfolio-img1.png" alt="" />
-                        </div>
-                        <div class="arrow-content">
-                            <div class="arrow">
-                                <a href=""><span><i class="fa-solid fa-arrow-right"></i></span></a>
+                    @forelse ($projects as $project)
+                        @php
+                            $image = $project->mediaByType('thumbnail') ?? $project->mediaFirst();
+                            $imagePath = $image?->url ?? asset('img/all-images/portfolio/portfolio-img1.png');
+                            $tags = $project->tags ? array_filter(array_map('trim', explode(',', $project->tags))) : [];
+                            $primaryTag = $tags[0] ?? 'Project';
+                        @endphp
+                        <div class="portfolio-boxarea">
+                            <div class="img1">
+                                <img src="{{ $imagePath }}" alt="{{ $project->name ?? 'Project' }}" />
                             </div>
-                            <div class="content-area">
-                                <p>User Interface design</p>
-                                <div class="space16"></div>
-                                <a href="">Web Design For Business</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="portfolio-boxarea">
-                        <div class="img1">
-                            <img src="/img/all-images/portfolio/portfolio-img2.png" alt="" />
-                        </div>
-                        <div class="arrow-content">
-                            <div class="arrow">
-                                <a href=""><span><i class="fa-solid fa-arrow-right"></i></span></a>
-                            </div>
-                            <div class="content-area">
-                                <p>User Interface design</p>
-                                <div class="space16"></div>
-                                <a href="">Web Design For Business</a>
+                            <div class="arrow-content">
+                                <div class="arrow">
+                                    <a href="{{ $project->link ?? '' }}"><span><i class="fa-solid fa-arrow-right"></i></span></a>
+                                </div>
+                                <div class="content-area">
+                                    <p>{{ $primaryTag }}</p>
+                                    <div class="space16"></div>
+                                    <a href="{{ $project->link ?? '' }}">{{ $project->name }}</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="portfolio-boxarea">
-                        <div class="img1">
-                            <img src="/img/all-images/portfolio/portfolio-img3.png" alt="" />
-                        </div>
-                        <div class="arrow-content">
-                            <div class="arrow">
-                                <a href=""><span><i class="fa-solid fa-arrow-right"></i></span></a>
+                    @empty
+                        <div class="portfolio-boxarea">
+                            <div class="img1">
+                                <img src="/img/all-images/portfolio/portfolio-img1.png" alt="" />
                             </div>
-                            <div class="content-area">
-                                <p>User Interface design</p>
-                                <div class="space16"></div>
-                                <a href="">Web Design For Business</a>
+                            <div class="arrow-content">
+                                <div class="arrow">
+                                    <a href=""><span><i class="fa-solid fa-arrow-right"></i></span></a>
+                                </div>
+                                <div class="content-area">
+                                    <p>Project</p>
+                                    <div class="space16"></div>
+                                    <a href="">No projects yet</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>

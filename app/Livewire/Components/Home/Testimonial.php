@@ -10,7 +10,7 @@ class Testimonial extends Component
     public $testimonials;
     public function mount()
     {
-        $this->testimonials = Review::with('images')->where('status', 'active')->limit(6)->get();
+        $this->testimonials = Review::with('mediaUsages.upload')->where('status', 'active')->limit(6)->get();
     }
     public function render()
     {

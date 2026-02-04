@@ -33,6 +33,9 @@
         <flux:sidebar.item icon="bars-3" href="{{ route('menus.index') }}" wire:navigate wire:current.exact="active">
             Menus
         </flux:sidebar.item>
+        <flux:sidebar.item icon="photo" href="{{ route('media.index') }}" wire:navigate wire:current.exact="active">
+            Media Library
+        </flux:sidebar.item>
         <flux:sidebar.item icon="inbox" badge="12" href="#">Inbox</flux:sidebar.item>
         <flux:sidebar.group expandable icon="star" heading="Favorites" class="grid">
             <flux:sidebar.item href="#" wire:navigate wire:current="active">Marketing site</flux:sidebar.item>

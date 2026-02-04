@@ -11,7 +11,7 @@ class About extends Component
 
     public function mount()
     {
-        $this->about = ModelsAbout::with('images')->first();
+        $this->about = ModelsAbout::with('mediaUsages.upload')->first();
     }
 
     public function render()

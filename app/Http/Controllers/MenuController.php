@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\HandlesMediaUsages;
 use App\Models\Menu;
 use App\Models\SubMenu;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class MenuController extends Controller
 {
+    use HandlesMediaUsages;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $menus = Menu::with('subMenus')->orderBy('created_at', 'desc')->get();
+        $menus = Menu::with('subMenus.mediaUsages.upload')->orderBy('created_at', 'desc')->get();
         // return $menus;
         return view('admin.menus.index', compact('menus'));
     }
@@ -40,7 +41,9 @@ class MenuController extends Controller
             'submenus.*.name' => 'nullable|string|max:255',
             'submenus.*.link' => 'nullable|string|max:255',
             'submenus.*.status' => 'nullable|in:active,inactive',
-            'submenus.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'submenus.*.media_usages' => 'nullable|array',
+            'submenus.*.media_usages.*.upload_id' => 'nullable|integer|exists:uploads,id',
+            'submenus.*.media_usages.*.type' => 'nullable|string|max:255',
         ]);
 
         $menu = Menu::create([
@@ -59,21 +62,7 @@ class MenuController extends Controller
                         'status' => $submenuData['status'] ?? 'active',
                     ]);
 
-                    // Handle submenu image if provided
-                    if ($request->hasFile("submenus.{$index}.image")) {
-                        $image = $request->file("submenus.{$index}.image");
-                        $path = 'submenus';
-                        $disk = 'public';
-                        $filename = $submenuData['name'] . '_' . time();
-                        $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
-
-                        $submenu->images()->create([
-                            'image' => $storedImage,
-                            'name' => $submenuData['name'],
-                            'alt' => $submenuData['name'],
-                            'title' => $submenuData['name'],
-                        ]);
-                    }
+                    $this->syncMediaUsages($submenu, $submenuData['media_usages'] ?? []);
                 }
             }
         }
@@ -86,7 +75,7 @@ class MenuController extends Controller
      */
     public function show(string $id)
     {
-        $menu = Menu::with(['subMenus.images'])->findOrFail($id);
+        $menu = Menu::with(['subMenus.mediaUsages.upload'])->findOrFail($id);
         return view('admin.menus.view', compact('menu'));
     }
 
@@ -95,7 +84,7 @@ class MenuController extends Controller
      */
     public function edit(string $id)
     {
-        $menu = Menu::with(['subMenus.images'])->findOrFail($id);
+        $menu = Menu::with(['subMenus.mediaUsages.upload'])->findOrFail($id);
         return view('admin.menus.edit', compact('menu'));
     }
 
@@ -111,7 +100,9 @@ class MenuController extends Controller
             'submenus.*.name' => 'nullable|string|max:255',
             'submenus.*.link' => 'nullable|string|max:255',
             'submenus.*.status' => 'nullable|in:active,inactive',
-            'submenus.*.image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'submenus.*.media_usages' => 'nullable|array',
+            'submenus.*.media_usages.*.upload_id' => 'nullable|integer|exists:uploads,id',
+            'submenus.*.media_usages.*.type' => 'nullable|string|max:255',
         ]);
 
         $menu = Menu::findOrFail($id);
@@ -129,13 +120,6 @@ class MenuController extends Controller
                 foreach ($submenusToDelete as $submenuId) {
                     $submenu = $menu->subMenus()->find($submenuId);
                     if ($submenu) {
-                        // Delete submenu image if exists
-                        if ($submenu->images) {
-                            if (Storage::disk('public')->exists($submenu->images->image)) {
-                                Storage::disk('public')->delete($submenu->images->image);
-                            }
-                            $submenu->images()->delete();
-                        }
                         $submenu->delete();
                     }
                 }
@@ -156,30 +140,7 @@ class MenuController extends Controller
                                 'status' => $submenuData['status'] ?? 'active',
                             ]);
 
-                            // Handle image update/deletion
-                            if ($request->hasFile("submenus.{$index}.image")) {
-                                // Delete old image if exists
-                                if ($submenu->images) {
-                                    if (Storage::disk('public')->exists($submenu->images->image)) {
-                                        Storage::disk('public')->delete($submenu->images->image);
-                                    }
-                                    $submenu->images()->delete();
-                                }
-
-                                // Upload new image
-                                $image = $request->file("submenus.{$index}.image");
-                                $path = 'submenus';
-                                $disk = 'public';
-                                $filename = $submenuData['name'] . '_' . time();
-                                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
-
-                                $submenu->images()->create([
-                                    'image' => $storedImage,
-                                    'name' => $submenuData['name'],
-                                    'alt' => $submenuData['name'],
-                                    'title' => $submenuData['name'],
-                                ]);
-                            }
+                            $this->syncMediaUsages($submenu, $submenuData['media_usages'] ?? []);
                         }
                     } else {
                         // New submenu
@@ -189,21 +150,7 @@ class MenuController extends Controller
                             'status' => $submenuData['status'] ?? 'active',
                         ]);
 
-                        // Handle new submenu image
-                        if ($request->hasFile("submenus.{$index}.image")) {
-                            $image = $request->file("submenus.{$index}.image");
-                            $path = 'submenus';
-                            $disk = 'public';
-                            $filename = $submenuData['name'] . '_' . time();
-                            $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
-
-                            $submenu->images()->create([
-                                'image' => $storedImage,
-                                'name' => $submenuData['name'],
-                                'alt' => $submenuData['name'],
-                                'title' => $submenuData['name'],
-                            ]);
-                        }
+                        $this->syncMediaUsages($submenu, $submenuData['media_usages'] ?? []);
                     }
                 }
             }
@@ -217,17 +164,7 @@ class MenuController extends Controller
      */
     public function destroy(string $id)
     {
-        $menu = Menu::with(['subMenus.images'])->findOrFail($id);
-
-        // Delete all submenu images and submenus
-        foreach ($menu->subMenus as $submenu) {
-            if ($submenu->images) {
-                if (Storage::disk('public')->exists($submenu->images->image)) {
-                    Storage::disk('public')->delete($submenu->images->image);
-                }
-                $submenu->images()->delete();
-            }
-        }
+        $menu = Menu::with(['subMenus.mediaUsages.upload'])->findOrFail($id);
 
         $menu->delete();
         return redirect()->route('menus.index')->with('success', 'Menu deleted successfully');

@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\HandlesMediaUsages;
 use App\Models\Service;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
+    use HandlesMediaUsages;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $services = Service::with('images')->get();
+        $services = Service::with('mediaUsages.upload')->get();
         return view('admin.services.index', compact('services'));
     }
 
@@ -23,7 +24,8 @@ class ServiceController extends Controller
     public function create()
     {
         $status = 'active'; // Default status for new services
-        return view('admin.services.create', compact('status'));
+        $selectedMedia = [];
+        return view('admin.services.create', compact('status', 'selectedMedia'));
     }
 
     /**
@@ -38,7 +40,9 @@ class ServiceController extends Controller
             'description' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'tags' => 'required|string|max:255',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'media_usages' => 'nullable|array',
+            'media_usages.*.upload_id' => 'nullable|integer|exists:uploads,id',
+            'media_usages.*.type' => 'nullable|string|max:255',
         ]);
 
         $service = Service::create([
@@ -49,28 +53,7 @@ class ServiceController extends Controller
             'tags' => $request->tags,
         ]);
 
-        // Handle multiple image uploads
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-            $imagesMetadata = $request->input('imagesMetadata', []);
-
-            foreach ($images as $index => $image) {
-                $metadata = $imagesMetadata[$index] ?? [];
-                $path = 'services';
-                $disk = 'public';
-                $filename = $metadata['name'] ?? $request->name . '_' . ($index + 1);
-                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
-
-                $service->images()->create([
-                    'image' => $storedImage,
-                    'name' => $metadata['name'] ?? $filename,
-                    'alt' => $metadata['alt'] ?? '',
-                    'title' => $metadata['title'] ?? '',
-                    'caption' => $metadata['caption'] ?? '',
-                    'keywords' => $metadata['keywords'] ?? '',
-                ]);
-            }
-        }
+        $this->syncMediaUsages($service, $request->input('media_usages', []));
 
         return redirect()->route('services.index')->with('success', 'Service created successfully');
     }
@@ -80,7 +63,7 @@ class ServiceController extends Controller
      */
     public function show(string $id)
     {
-        $service = Service::with('images')->find($id);
+        $service = Service::with('mediaUsages.upload')->find($id);
         return view('admin.services.view', compact('service'));
     }
 
@@ -89,12 +72,22 @@ class ServiceController extends Controller
      */
     public function edit(string $id)
     {
-        $service = Service::with('images')->findOrFail($id);
+        $service = Service::with('mediaUsages.upload')->findOrFail($id);
 
         // Parse tags from comma-separated string to array
         $tags = $service->tags ? explode(',', $service->tags) : [];
 
-        return view('admin.services.edit', compact('service', 'tags'));
+        $selectedMedia = $service->mediaUsages()->with('upload')->get()->map(function ($usage) {
+            return [
+                'upload_id' => $usage->upload_id,
+                'type' => $usage->type,
+                'url' => $usage->upload?->url,
+                'file_name' => $usage->upload?->file_name,
+                'seo_alt_text' => $usage->upload?->seo_alt_text,
+            ];
+        })->toArray();
+
+        return view('admin.services.edit', compact('service', 'tags', 'selectedMedia'));
     }
 
     /**
@@ -108,7 +101,9 @@ class ServiceController extends Controller
             'description' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
             'tags' => 'required|string|max:255',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'media_usages' => 'nullable|array',
+            'media_usages.*.upload_id' => 'nullable|integer|exists:uploads,id',
+            'media_usages.*.type' => 'nullable|string|max:255',
         ]);
 
         $service = Service::findOrFail($id);
@@ -121,61 +116,7 @@ class ServiceController extends Controller
             'tags' => $request->tags,
         ]);
 
-        // Handle image deletions
-        if ($request->has('imagesToDelete')) {
-            $imagesToDelete = json_decode($request->input('imagesToDelete'), true);
-            if (is_array($imagesToDelete) && !empty($imagesToDelete)) {
-                foreach ($imagesToDelete as $imageId) {
-                    $image = $service->images()->find($imageId);
-                    if ($image) {
-                        if (Storage::disk('public')->exists($image->image)) {
-                            Storage::disk('public')->delete($image->image);
-                        }
-                        $image->delete();
-                    }
-                }
-            }
-        }
-
-        // Handle existing images metadata updates
-        if ($request->has('existingImagesMetadata')) {
-            $existingImagesMetadata = $request->input('existingImagesMetadata', []);
-            foreach ($existingImagesMetadata as $imageId => $metadata) {
-                $image = $service->images()->find($imageId);
-                if ($image) {
-                    $image->update([
-                        'name' => $metadata['name'] ?? $image->name,
-                        'alt' => $metadata['alt'] ?? $image->alt,
-                        'title' => $metadata['title'] ?? $image->title,
-                        'caption' => $metadata['caption'] ?? $image->caption,
-                        'keywords' => $metadata['keywords'] ?? $image->keywords,
-                    ]);
-                }
-            }
-        }
-
-        // Handle new image uploads
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-            $imagesMetadata = $request->input('imagesMetadata', []);
-
-            foreach ($images as $index => $image) {
-                $metadata = $imagesMetadata[$index] ?? [];
-                $path = 'services';
-                $disk = 'public';
-                $filename = $metadata['name'] ?? $request->name . '_' . ($index + 1);
-                $storedImage = $image->storeAs($path, $filename . '.' . $image->getClientOriginalExtension(), $disk);
-
-                $service->images()->create([
-                    'image' => $storedImage,
-                    'name' => $metadata['name'] ?? $filename,
-                    'alt' => $metadata['alt'] ?? '',
-                    'title' => $metadata['title'] ?? '',
-                    'caption' => $metadata['caption'] ?? '',
-                    'keywords' => $metadata['keywords'] ?? '',
-                ]);
-            }
-        }
+        $this->syncMediaUsages($service, $request->input('media_usages', []));
 
         return redirect()->route('services.index')->with('success', 'Service updated successfully');
     }
@@ -185,14 +126,7 @@ class ServiceController extends Controller
      */
     public function destroy(string $id)
     {
-        $service = Service::with('images')->findOrFail($id);
-
-        // Delete associated images and files
-        foreach ($service->images as $image) {
-            if (Storage::disk('public')->exists($image->image)) {
-                Storage::disk('public')->delete($image->image);
-            }
-        }
+        $service = Service::with('mediaUsages.upload')->findOrFail($id);
 
         $service->delete();
         return redirect()->route('services.index')->with('success', 'Service deleted successfully');

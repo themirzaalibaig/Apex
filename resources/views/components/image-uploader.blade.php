@@ -22,6 +22,7 @@
         currentEditType: null, // 'new' or 'existing'
         imageName: '',
         imageAlt: '',
+        imageType: '',
         imageTitle: '',
         imageCaption: '',
         imageKeywords: '',
@@ -137,6 +138,7 @@
                 preview: e.target.result,
                 name: file.name.replace(/\.[^/.]+$/, ''),
                 alt: '',
+                type: '',
                 title: '',
                 caption: '',
                 keywords: ''
@@ -162,6 +164,7 @@
         const img = state.selectedFiles[index];
         state.imageName = img.name;
         state.imageAlt = img.alt;
+        state.imageType = img.type || '';
         state.imageTitle = img.title;
         state.imageCaption = img.caption;
         state.imageKeywords = img.keywords;
@@ -177,6 +180,7 @@
 
         state.imageName = metadata.name || '';
         state.imageAlt = metadata.alt || '';
+        state.imageType = metadata.type || '';
         state.imageTitle = metadata.title || '';
         state.imageCaption = metadata.caption || '';
         state.imageKeywords = metadata.keywords || '';
@@ -205,6 +209,7 @@
 
         container.querySelector('#modal-imageName').value = state.imageName;
         container.querySelector('#modal-imageAlt').value = state.imageAlt;
+        container.querySelector('#modal-imageType').value = state.imageType;
         container.querySelector('#modal-imageTitle').value = state.imageTitle;
         container.querySelector('#modal-imageCaption').value = state.imageCaption;
         container.querySelector('#modal-imageKeywords').value = state.imageKeywords;
@@ -225,6 +230,7 @@
     function resetForm() {
         state.imageName = '';
         state.imageAlt = '';
+        state.imageType = '';
         state.imageTitle = '';
         state.imageCaption = '';
         state.imageKeywords = '';
@@ -233,6 +239,7 @@
     function saveMetadata() {
         state.imageName = container.querySelector('#modal-imageName').value.trim();
         state.imageAlt = container.querySelector('#modal-imageAlt').value.trim();
+        state.imageType = container.querySelector('#modal-imageType').value.trim();
         state.imageTitle = container.querySelector('#modal-imageTitle').value.trim();
         state.imageCaption = container.querySelector('#modal-imageCaption').value.trim();
         state.imageKeywords = container.querySelector('#modal-imageKeywords').value.trim();
@@ -249,6 +256,7 @@
                 // Update new image metadata
                 state.selectedFiles[state.currentEditIndex].name = state.imageName;
                 state.selectedFiles[state.currentEditIndex].alt = state.imageAlt;
+                state.selectedFiles[state.currentEditIndex].type = state.imageType;
                 state.selectedFiles[state.currentEditIndex].title = state.imageTitle;
                 state.selectedFiles[state.currentEditIndex].caption = state.imageCaption;
                 state.selectedFiles[state.currentEditIndex].keywords = state.imageKeywords;
@@ -258,6 +266,7 @@
                 state.existingImagesMetadata[img.id] = {
                     name: state.imageName,
                     alt: state.imageAlt,
+                    type: state.imageType,
                     title: state.imageTitle,
                     caption: state.imageCaption,
                     keywords: state.imageKeywords
@@ -286,6 +295,7 @@
             metadataContainer.innerHTML += `
                 <input type="text" name="imagesMetadata[${index}][name]" value="${img.name}" class="hidden">
                 <input type="text" name="imagesMetadata[${index}][alt]" value="${img.alt}" class="hidden">
+                <input type="text" name="imagesMetadata[${index}][type]" value="${img.type}" class="hidden">
                 <input type="text" name="imagesMetadata[${index}][title]" value="${img.title}" class="hidden">
                 <textarea name="imagesMetadata[${index}][caption]" class="hidden">${img.caption}</textarea>
                 <input type="text" name="imagesMetadata[${index}][keywords]" value="${img.keywords}" class="hidden">
@@ -309,6 +319,7 @@
                 metadataContainer.innerHTML += `
                     <input type="hidden" name="existingImagesMetadata[${imageId}][name]" value="${metadata.name}">
                     <input type="hidden" name="existingImagesMetadata[${imageId}][alt]" value="${metadata.alt}">
+                    <input type="hidden" name="existingImagesMetadata[${imageId}][type]" value="${metadata.type}">
                     <input type="hidden" name="existingImagesMetadata[${imageId}][title]" value="${metadata.title}">
                     <textarea name="existingImagesMetadata[${imageId}][caption]" class="hidden">${metadata.caption}</textarea>
                     <input type="hidden" name="existingImagesMetadata[${imageId}][keywords]" value="${metadata.keywords}">
@@ -426,6 +437,18 @@
                                 class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
+                    </div>
+
+                    <div>
+                        <label for="modal-imageType" class="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
+                            Type / Role
+                        </label>
+                        <input
+                            type="text"
+                            id="modal-imageType"
+                            placeholder="e.g., hero, background, thumbnail"
+                            class="w-full px-3 py-2 border border-zinc-300 dark:border-zinc-600 rounded-lg bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
                     </div>
 
                     <div>
